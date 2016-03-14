@@ -8,13 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 /**
  * Created by moetto on 3/11/16.
  */
-public class TODOTasksFragment extends ListFragment{
+public class TODOTasksFragment extends ListFragment {
     public static final String TAG = "TODOTasksFragment";
 
     @Nullable
@@ -34,14 +35,16 @@ public class TODOTasksFragment extends ListFragment{
         setListAdapter(taskListAdapter);
         //getListView().setOnItemClickListener(this);
     }
+
     /*
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG, "Halp, I've been clicked");
     }
     */
-    BaseAdapter taskListAdapter = new BaseAdapter(){
-        private final String[] dummyTasks = new String[]{"a","b","c","d"};
+    BaseAdapter taskListAdapter = new BaseAdapter() {
+        private final String[] dummyTasks = new String[]{"a", "b", "c", "d"};
+
         @Override
         public int getCount() {
             return dummyTasks.length;
@@ -59,12 +62,23 @@ public class TODOTasksFragment extends ListFragment{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
+            if (position == 1) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
+                LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.group_task_parent_layout);
+                View childView = getActivity().getLayoutInflater().inflate(R.layout.child_complex_task, null);
+                linearLayout.addView(childView, 1);
+                return convertView;
+            } else {
+                /*
+                if (convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.complex_task, null);
+                }
+                */
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.complex_task, null);
+                TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
+                textView.setText(dummyTasks[position]);
+                return convertView;
             }
-            TextView textView = (TextView)convertView.findViewById(R.id.complex_text);
-            textView.setText(dummyTasks[position]);
-            return convertView;
         }
     };
 }
