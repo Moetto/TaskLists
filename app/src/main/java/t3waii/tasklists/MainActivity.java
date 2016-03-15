@@ -22,10 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //final ActionBar actionBar = getActionBar();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         setSupportActionBar(toolbar);
 
         pagerAdapter =
