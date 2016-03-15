@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 
@@ -38,7 +39,11 @@ public class TODOTasksFragment extends ListFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Halp, I've been clicked!");
+                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+                popupMenu.getMenuInflater().inflate(R.menu.edit_task, popupMenu.getMenu());
+                popupMenu.show();
             }
+
         };
 
         @Override

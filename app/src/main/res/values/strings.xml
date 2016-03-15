@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">TaskLists</string>
     <string name="action_settings">Settings</string>
+    <string name="cancel_task">Cancel</string>
+    <string name="edit_task">Edit</string>
 </resources>
