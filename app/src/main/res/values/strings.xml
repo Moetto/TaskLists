@@ -3,4 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="cancel_task">Cancel</string>
     <string name="edit_task">Edit</string>
+    <string name="new_task">New task</string>
+    <string name="task_name">Task name</string>
+    <string name="due">Due to</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="parent_task">Parent task</string>
+    <string name="assigned_to">Assigned to</string>
+    <string name="save">Save</string>
 </resources>

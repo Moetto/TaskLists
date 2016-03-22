@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="divider_height">2dp</dimen>
+    <dimen name="divider_margintop">4dp</dimen>
+    <dimen name="divider_marginbottom">4dp</dimen>
+    <dimen name="spinner_paddingtop">8dp</dimen>
+    <dimen name="newtask_savebutton_margintop">8dp</dimen>
 </resources>
