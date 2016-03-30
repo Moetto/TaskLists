@@ -2,6 +2,8 @@ package t3waii.tasklists;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,10 +13,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.EditText;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     private final static int TAB_COUNT = 4;
     private static final String TAG = "MainActivity";
+    private Menu menu;
     FragmentPagerAdapter pagerAdapter;
     ViewPager pager;
     TabLayout tabs;
@@ -72,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -82,15 +89,91 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_sign_out) {
-            GoogleAccountManager googleAccountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
-            googleAccountManager.logout();
-            return true;
+        switch (id) {
+            //noinspection SimplifiableIfStatement
+            case R.id.action_settings:
+                return true;
+            case R.id.action_sign_out:
+                GoogleAccountManager googleAccountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
+                googleAccountManager.logout();
+                return true;
+            case R.id.dialog_newgroup_settings:
+                createNewGroup();
+                return true;
+            case R.id.dialog_managegroup_settings:
+                startActivity(new Intent(MainActivity.this, ManageGroupActivity.class));
+                return true;
+            case R.id.dialog_leavegroup_settings:
+                leaveCurrentGroup();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    // When user is in group, hide new group menu item and show manage group and leave group.
+    private void setMainMenuGroupItemsVisibility(boolean isInGroup) {
+        MenuItem item = (MenuItem) this.menu.findItem(R.id.dialog_newgroup_settings);
+        item.setVisible(!isInGroup);
+        item = (MenuItem) this.menu.findItem(R.id.dialog_managegroup_settings);
+        item.setVisible(isInGroup);
+        item = (MenuItem) this.menu.findItem(R.id.dialog_leavegroup_settings);
+        item.setVisible(isInGroup);
+    }
+
+    // Take new group name, show/hide menu elements and register new group
+    private void leaveCurrentGroup() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View promptView = layoutInflater.inflate(R.layout.group_confirm_leave, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // set group_new.xml to be the layout file of the alertdialog builder
+        alertDialogBuilder.setView(promptView);
+        // setup a dialog window
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                        //TODO: unregister self from current group
+                        setMainMenuGroupItemsVisibility(false);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        // create an alert dialog
+        AlertDialog alertD = alertDialogBuilder.create();
+        alertD.show();
+    }
+
+    // Take new group name, show/hide menu elements and register new group
+    private void createNewGroup() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View promptView = layoutInflater.inflate(R.layout.group_new, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // set group_new.xml to be the layout file of the alertdialog builder
+        alertDialogBuilder.setView(promptView);
+        final EditText input = (EditText) promptView.findViewById(R.id.newGroupName);
+        // setup a dialog window
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                        Log.d("test", "value:" + input.getText());
+                        setMainMenuGroupItemsVisibility(true);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        // create an alert dialog
+        AlertDialog alertD = alertDialogBuilder.create();
+        alertD.show();
     }
 
     public static class TabAdapter extends FragmentPagerAdapter {
@@ -115,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
             fragment.setArguments(args);
             return fragment;
         }
+
     }
 
     public void onSignIn() {

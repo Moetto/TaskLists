@@ -8,4 +8,20 @@
     <string name="loading">Loading</string>
     <string name="signed_out">Signed out</string>
     <string name="sign_out">Sign out</string>
+    <string name="new_task">New task</string>
+    <string name="task_name">Task name</string>
+    <string name="due">Due to</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="parent_task">Parent task</string>
+    <string name="assigned_to">Assigned to</string>
+    <string name="save">Save</string>
+    <string name="new_group">New group</string>
+    <string name="manage_group">Manage group</string>
+    <string name="leave_group">Leave group</string>
+    <string name="group_name">Group name</string>
+    <string name="confirm_leave_group">Leave current group?</string>
+    <string name="manage_group_members">Manage group members</string>
+    <string name="current_members">Current members</string>
+    <string name="other_users">Other users</string>
 </resources>
