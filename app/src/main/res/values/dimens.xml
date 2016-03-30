@@ -9,4 +9,5 @@
     <dimen name="spinner_paddingtop">8dp</dimen>
     <dimen name="newtask_savebutton_margintop">8dp</dimen>
     <dimen name="dialog_padding">16dp</dimen>
+    <dimen name="managegroup_user_marginbottomtop">6dp</dimen>
 </resources>

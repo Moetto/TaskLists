@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 createNewGroup();
                 return true;
             case R.id.dialog_managegroup_settings:
-                //TODO: open edit group dialog
+                startActivity(new Intent(MainActivity.this, ManageGroupActivity.class));
                 return true;
             case R.id.dialog_leavegroup_settings:
                 leaveCurrentGroup();

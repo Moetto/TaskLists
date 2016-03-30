@@ -16,4 +16,7 @@
     <string name="leave_group">Leave group</string>
     <string name="group_name">Group name</string>
     <string name="confirm_leave_group">Leave current group?</string>
+    <string name="manage_group_members">Manage group members</string>
+    <string name="current_members">Current members</string>
+    <string name="other_users">Other users</string>
 </resources>

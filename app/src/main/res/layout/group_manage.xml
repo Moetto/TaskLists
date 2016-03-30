@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dialog_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/current_members"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/divider_margintop"
+            android:layout_marginBottom="@dimen/divider_marginbottom"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/other_users"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="@dimen/managegroup_user_marginbottomtop"
+            android:layout_marginTop="@dimen/managegroup_user_marginbottomtop">
+            <ImageView
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/avatar1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Antti Möttönen"/>
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="0.1"/>
+        </LinearLayout>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:onClick="clickSaveButton"
+            android:text="@string/save"/>
+    </LinearLayout>
+
+</LinearLayout>
