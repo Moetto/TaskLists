@@ -7,4 +7,21 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/dialog_newgroup_settings"
+        android:orderInCategory="100"
+        android:title="@string/new_group"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/dialog_managegroup_settings"
+        android:orderInCategory="100"
+        android:title="@string/manage_group"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/dialog_leavegroup_settings"
+        android:orderInCategory="100"
+        android:title="@string/leave_group"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>
