@@ -228,7 +228,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Toast.makeText(MainActivity.this, "Failed request", Toast.LENGTH_LONG).show();
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.d(TAG, "Failed request");
-                Log.d(TAG, new String(errorResponse));
+                if (errorResponse != null) {
+                    Log.d(TAG, new String(errorResponse));
+                }
             }
 
             @Override
