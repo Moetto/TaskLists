@@ -15,7 +15,7 @@ public class ManageGroupActivity extends Activity {
     }
 
     public void clickSaveButton(View v) {
-        Log.d("test", "Save clicked!");
+        //TODO: implement update group members
         finish();
     }
 }
