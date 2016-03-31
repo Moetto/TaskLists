@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -67,11 +68,12 @@ public class TODOTasksFragment extends ListFragment {
             if (position == 1) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
                 convertView.findViewById(R.id.edit_button).setOnClickListener(editClickListener);
-                TextView parentText = (TextView)convertView.findViewById(R.id.complex_text);
+                TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
                 parentText.setText("parent text");
-                LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.group_task_parent_layout);
-                View childView = createComplexTask(getActivity().getLayoutInflater());
-                TextView childText = (TextView)childView.findViewById(R.id.complex_text);
+                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
+                boolean last = true;
+                View childView = createChildView(getActivity().getLayoutInflater(), last);
+                TextView childText = (TextView) childView.findViewById(R.id.complex_text);
                 childText.setText("child text");
                 linearLayout.addView(childView, 1);
                 return convertView;
@@ -85,7 +87,18 @@ public class TODOTasksFragment extends ListFragment {
 
         private View createComplexTask(LayoutInflater inflater) {
             View view = inflater.inflate(R.layout.complex_task, null);
-            ImageButton settingsButton = (ImageButton)view.findViewById(R.id.edit_button);
+            ImageButton settingsButton = (ImageButton) view.findViewById(R.id.edit_button);
+            settingsButton.setOnClickListener(editClickListener);
+            return view;
+        }
+
+        private View createChildView(LayoutInflater inflater, boolean lastChild) {
+            View view = inflater.inflate(R.layout.child_complex_task, null);
+            if (lastChild){
+                ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
+                imageView.setImageResource(R.drawable.tree_end);
+            }
+            ImageButton settingsButton = (ImageButton) view.findViewById(R.id.edit_button);
             settingsButton.setOnClickListener(editClickListener);
             return view;
         }
