@@ -71,11 +71,16 @@ public class TODOTasksFragment extends ListFragment {
                 TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
                 parentText.setText("parent text");
                 LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
-                boolean last = true;
+                boolean last = false;
                 View childView = createChildView(getActivity().getLayoutInflater(), last);
                 TextView childText = (TextView) childView.findViewById(R.id.complex_text);
-                childText.setText("child text");
+                childText.setText("child text 1");
                 linearLayout.addView(childView, 1);
+                last = true;
+                childView = createChildView(getActivity().getLayoutInflater(), last);
+                childText = (TextView)childView.findViewById(R.id.complex_text);
+                childText.setText("Child text 2");
+                linearLayout.addView(childView, 2);
                 return convertView;
             } else {
                 convertView = createComplexTask(inflater);
