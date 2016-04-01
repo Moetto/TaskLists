@@ -31,7 +31,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
     private SimpleDateFormat dateFormatter, timeFormatter;
 
-    private Spinner newTaskParentTask, newTaskAssignedTo;
+    private Spinner newTaskParentTask, newTaskAssignedTo, newTaskLocation;
 
     private Button newTaskSave;
 
@@ -43,12 +43,13 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         setDueTimeDialog();
 
         setParentTaskElement();
+        setLocationElement();
         setAssignedToElement();
     }
 
     public void clickSaveButton(View v) {
         //TODO: implement save new task
-        Log.d("test", "save clicked");
+        finish();
     }
 
     private void setAssignedToElement() {
@@ -65,6 +66,22 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskAssignedTo.setAdapter(dataAdapter);
+    }
+
+    private void setLocationElement() {
+        newTaskLocation = (Spinner) findViewById(R.id.newTaskLocation);
+
+        List<String> list = new ArrayList<String>();
+        //TODO: get values from actual source
+        list.add("Home");
+        list.add("School");
+        list.add("Garage");
+        list.add("Work");
+        list.add("Summer home");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        newTaskLocation.setAdapter(dataAdapter);
     }
 
     private void setParentTaskElement() {

@@ -24,4 +24,5 @@
     <string name="manage_group_members">Manage group members</string>
     <string name="current_members">Current members</string>
     <string name="other_users">Other users</string>
+    <string name="location">Location</string>
 </resources>

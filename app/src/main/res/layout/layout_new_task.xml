@@ -60,24 +60,6 @@
                 android:hint="@string/time"/>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/parent_task"/>
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spinner_paddingtop"
-            android:id="@+id/newTaskParentTask"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginTop="@dimen/divider_margintop"
-            android:layout_marginBottom="@dimen/divider_marginbottom"
-            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -90,6 +72,44 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/spinner_paddingtop"
             android:id="@+id/newTaskAssignedTo"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/divider_margintop"
+            android:layout_marginBottom="@dimen/divider_marginbottom"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/location"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/spinner_paddingtop"
+            android:id="@+id/newTaskLocation"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/divider_margintop"
+            android:layout_marginBottom="@dimen/divider_marginbottom"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/parent_task"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/spinner_paddingtop"
+            android:id="@+id/newTaskParentTask"/>
 
         <Button
             android:layout_width="wrap_content"
