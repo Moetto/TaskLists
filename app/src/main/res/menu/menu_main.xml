@@ -15,8 +15,13 @@
     <item
         android:id="@+id/dialog_managegroup_settings"
         android:orderInCategory="100"
-        android:title="@string/manage_group"
+        android:title="@string/manage_group_users"
         android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/dialog_managegrouplocations_settings"
+        android:orderInCategory="100"
+        android:title="@string/manage_group_locations"
         app:showAsAction="never" />
     <item
         android:id="@+id/dialog_leavegroup_settings"
@@ -27,7 +32,6 @@
     <item
         android:id="@+id/action_sign_out"
         android:orderInCategory="110"
-        android:title="@string/sign_out"
-        />
+        android:title="@string/sign_out" />
 
 </menu>

@@ -1,8 +1,8 @@
 package t3waii.tasklists;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,19 +13,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -106,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
             case R.id.dialog_leavegroup_settings:
                 leaveCurrentGroup();
                 return true;
+            case R.id.dialog_managegrouplocations_settings:
+                startActivity(new Intent(MainActivity.this, ManageGroupLocations.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         item.setVisible(isInGroup);
         item = (MenuItem) this.menu.findItem(R.id.dialog_leavegroup_settings);
         item.setVisible(isInGroup);
+        item = (MenuItem) this.menu.findItem(R.id.dialog_managegrouplocations_settings);
+        item.setVisible(true); //TODO: change to isInGroup
     }
 
     // Take new group name, show/hide menu elements and register new group

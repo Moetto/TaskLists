@@ -17,7 +17,6 @@
     <string name="assigned_to">Assigned to</string>
     <string name="save">Save</string>
     <string name="new_group">New group</string>
-    <string name="manage_group">Manage group</string>
     <string name="leave_group">Leave group</string>
     <string name="group_name">Group name</string>
     <string name="confirm_leave_group">Leave current group?</string>
@@ -25,4 +24,7 @@
     <string name="current_members">Current members</string>
     <string name="other_users">Other users</string>
     <string name="location">Location</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="manage_group_users">Manage group users</string>
+    <string name="manage_group_locations">Manage group locations</string>
 </resources>
