@@ -35,7 +35,7 @@ public class TODOTasksFragment extends ListFragment {
     }
 
     BaseAdapter taskListAdapter = new BaseAdapter() {
-        private final String[] dummyTasks = new String[]{"a", "b", "c", "d"};
+        private final String[] dummyTasks = new String[]{"Taking Kiwi for a walk", "b", "Buy eggs", "Prepare dinner"};
         View.OnClickListener editClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,17 +69,17 @@ public class TODOTasksFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
                 convertView.findViewById(R.id.edit_button).setOnClickListener(editClickListener);
                 TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
-                parentText.setText("parent text");
+                parentText.setText("Cleaning the house");
                 LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
                 boolean last = false;
                 View childView = createChildView(getActivity().getLayoutInflater(), last);
                 TextView childText = (TextView) childView.findViewById(R.id.complex_text);
-                childText.setText("child text 1");
+                childText.setText("Vacuuming");
                 linearLayout.addView(childView, 1);
                 last = true;
                 childView = createChildView(getActivity().getLayoutInflater(), last);
                 childText = (TextView)childView.findViewById(R.id.complex_text);
-                childText.setText("Child text 2");
+                childText.setText("Dusting carpets");
                 linearLayout.addView(childView, 2);
                 return convertView;
             } else {
