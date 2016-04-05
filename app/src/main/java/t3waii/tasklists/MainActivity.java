@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         item = (MenuItem) this.menu.findItem(R.id.dialog_leavegroup_settings);
         item.setVisible(isInGroup);
         item = (MenuItem) this.menu.findItem(R.id.dialog_managegrouplocations_settings);
-        item.setVisible(true); //TODO: change to isInGroup
+        item.setVisible(isInGroup);
     }
 
     // Take new group name, show/hide menu elements and register new group
