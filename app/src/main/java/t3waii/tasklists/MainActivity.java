@@ -190,7 +190,13 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Tittelipittelipuu";
+            String[] titles = new String[]{
+                    "TODO",
+                    "Own",
+                    "Open",
+                    "Completed"
+            };
+            return titles[position];
         }
 
         @Override
