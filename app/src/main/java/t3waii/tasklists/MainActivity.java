@@ -113,14 +113,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     // When user is in group, hide new group menu item and show manage group and leave group.
     private void setMainMenuGroupItemsVisibility(boolean isInGroup) {
-        MenuItem item = (MenuItem) this.menu.findItem(R.id.dialog_newgroup_settings);
-        item.setVisible(!isInGroup);
-        item = (MenuItem) this.menu.findItem(R.id.dialog_managegroup_settings);
-        item.setVisible(isInGroup);
-        item = (MenuItem) this.menu.findItem(R.id.dialog_leavegroup_settings);
-        item.setVisible(isInGroup);
-        item = (MenuItem) this.menu.findItem(R.id.dialog_managegrouplocations_settings);
-        item.setVisible(isInGroup);
+        this.menu.findItem(R.id.dialog_newgroup_settings).setVisible(!isInGroup);
+        this.menu.findItem(R.id.dialog_managegroup_settings).setVisible(isInGroup);
+        this.menu.findItem(R.id.dialog_leavegroup_settings).setVisible(isInGroup);
+        this.menu.findItem(R.id.dialog_managegrouplocations_settings).setVisible(isInGroup);
     }
 
     // Take new group name, show/hide menu elements and register new group

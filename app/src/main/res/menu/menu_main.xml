@@ -22,6 +22,7 @@
         android:id="@+id/dialog_managegrouplocations_settings"
         android:orderInCategory="100"
         android:title="@string/manage_group_locations"
+        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/dialog_leavegroup_settings"
