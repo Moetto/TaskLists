@@ -50,10 +50,6 @@ public class ManageGroupLocations extends Activity {
         }
     }
 
-    public void clickEditLocationButton(View view) {
-        Log.d("test", "edit location clicked");
-    }
-
     public void clickRemoveLocationButton(View view) {
         Log.d("test", "remove location clicked");
     }
