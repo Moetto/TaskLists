@@ -10,7 +10,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:title="@string/new_task"
-        app:titleTextColor="@android:color/white"/>
+        app:titleTextColor="@color/colorAccent"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor"
             android:id="@+id/newTaskName">
             <requestFocus/>
         </EditText>
@@ -77,8 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
             android:layout_marginTop="@dimen/divider_margintop"
-            android:layout_marginBottom="@dimen/divider_marginbottom"
-            android:background="@android:color/darker_gray"/>
+            android:layout_marginBottom="@dimen/divider_marginbottom"/>
 
         <TextView
             android:layout_width="wrap_content"

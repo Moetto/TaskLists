@@ -188,9 +188,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         public CharSequence getPageTitle(int position) {
             String[] titles = new String[]{
                     "TODO",
-                    "Own",
+                    "Created",
                     "Open",
-                    "Completed"
+                    "Complete"
             };
             return titles[position];
         }

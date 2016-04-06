@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:inputType="text"
         android:singleLine="true"
+        android:textCursorDrawable="@drawable/cursor"
         android:id="@+id/newGroupName">
         <requestFocus/>
     </EditText>
