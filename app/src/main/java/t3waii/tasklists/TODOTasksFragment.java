@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 /**
  * Created by moetto on 3/11/16.
@@ -35,10 +37,13 @@ public class TODOTasksFragment extends ListFragment {
     }
 
     BaseAdapter taskListAdapter = new BaseAdapter() {
-        private final String[] dummyTasks = new String[]{"Taking Kiwi for a walk", "b", "Buy eggs", "Prepare dinner"};
         View.OnClickListener editClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: find the textview element nearby and gettag from that
+                //int id = (int) v.getTag();
+                //Log.d(TAG, Integer.toString(id));
+
                 Log.d(TAG, "Halp, I've been clicked!");
                 PopupMenu popupMenu = new PopupMenu(getActivity(), v);
                 popupMenu.getMenuInflater().inflate(R.menu.edit_task, popupMenu.getMenu());
@@ -49,45 +54,48 @@ public class TODOTasksFragment extends ListFragment {
 
         @Override
         public int getCount() {
-            return dummyTasks.length;
+            return MainActivity.tasks.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return dummyTasks[position];
+            return MainActivity.tasks.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return MainActivity.tasks.get(position).getId();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = getActivity().getLayoutInflater();
-            if (position == 1) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
-                convertView.findViewById(R.id.edit_button).setOnClickListener(editClickListener);
-                TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
-                parentText.setText("Cleaning the house");
-                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
-                boolean last = false;
-                View childView = createChildView(getActivity().getLayoutInflater(), last);
-                TextView childText = (TextView) childView.findViewById(R.id.complex_text);
-                childText.setText("Vacuuming");
-                linearLayout.addView(childView, 1);
-                last = true;
-                childView = createChildView(getActivity().getLayoutInflater(), last);
-                childText = (TextView)childView.findViewById(R.id.complex_text);
-                childText.setText("Dusting carpets");
-                linearLayout.addView(childView, 2);
-                return convertView;
-            } else {
+            //TODO: FIX THIS TO WORK WITH TASK.JAVA
+            Task task = MainActivity.tasks.get(position);
+            if(task.getChildren().isEmpty()) {
                 convertView = createComplexTask(inflater);
                 TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
-                textView.setText(dummyTasks[position]);
+                textView.setTag(task.getId());
+                textView.setText(MainActivity.tasks.get(position).getName());
                 return convertView;
             }
+
+            convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
+            convertView.findViewById(R.id.edit_button).setOnClickListener(editClickListener);
+            TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
+            parentText.setTag(task.getId());
+            parentText.setText(task.getName());
+
+            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
+            List<Task> children = task.getChildren();
+            for(int i = 0; i < children.size(); i++) {
+                View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size()-1) ? true : false));
+                TextView childText = (TextView) childView.findViewById(R.id.complex_text);
+                childText.setTag(task.getChildren().get(i).getId());
+                childText.setText(children.get(i).getName());
+                linearLayout.addView(childView, (i+1));
+            }
+            return convertView;
         }
 
         private View createComplexTask(LayoutInflater inflater) {

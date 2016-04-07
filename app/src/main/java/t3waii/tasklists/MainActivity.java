@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,11 +25,14 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements SignInListener {
 
-    private final static int TAB_COUNT = 4;
+    private final static int TAB_COUNT = 1; //TODO: 4
     private static final String TAG = "MainActivity";
     private Menu menu;
     FragmentPagerAdapter pagerAdapter;
@@ -36,12 +40,51 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     TabLayout tabs;
     String ACCOUNT_MANAGER = "accountmanager";
 
+    public static List<User> users = new ArrayList<>();
+    public static List<Location> locations = new ArrayList<>();
+    public static List<Task> tasks = new ArrayList<>();
+    public static List<Fragment> fragments = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fragments.add(new TODOTasksFragment());
+
+        //TODO: remove
+        users.add(new User("Nimi1", "id1"));
+        users.add(new User("Nimi2", "id2"));
+        users.add(new User("Nimi3", "id3"));
+        users.add(new User("Nimi4", "id4"));
+        users.add(new User("Nimi5", "id5"));
+        locations.add(new Location("Paikka1", 23.24, 35.23));
+        locations.add(new Location("Paikka2", 23.24, 35.23));
+        locations.add(new Location("Paikka3", 23.24, 35.23));
+        locations.add(new Location("Paikka4", 23.24, 35.23));
+        locations.add(new Location("Paikka5", 23.24, 35.23));
+        tasks.add(new Task(1, 10));
+        tasks.add(new Task(2, 10));
+        tasks.add(new Task(3, 10));
+        tasks.add(new Task(4, 10));
+        tasks.add(new Task(5, 10));
+        tasks.get(0).setName("Task1");
+        tasks.get(1).setName("Task2");
+        tasks.get(2).setName("Task3");
+        tasks.get(3).setName("Task4");
+        tasks.get(4).setName("Task5");
+        Task childtask = new Task(346, 10);
+        childtask.setName("Childtask1");
+        tasks.get(1).addChild(childtask);
+        childtask = new Task(347, 10);
+        childtask.setName("Childtask2");
+        tasks.get(1).addChild(childtask);
+        childtask = new Task(348, 10);
+        childtask.setName("Childtask3");
+        tasks.get(1).addChild(childtask);
+
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -197,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-            android.support.v4.app.Fragment fragment = new TODOTasksFragment();
+            android.support.v4.app.Fragment fragment = MainActivity.fragments.get(position);
             Bundle args = new Bundle();
             fragment.setArguments(args);
             return fragment;
