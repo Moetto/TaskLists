@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     ViewPager pager;
     TabLayout tabs;
     String ACCOUNT_MANAGER = "accountmanager";
+    private String rest_api_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams("token", accountManager.getGoogleToken());
         Log.d(TAG, params.toString());
-        client.post("http://192.168.0.134:8000/register/", params, new AsyncHttpResponseHandler() {
+        client.post(getString(R.string.server_url) + "register/", params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -224,7 +225,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 Toast.makeText(MainActivity.this, "Successful request", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Successful request");
+                rest_api_id = new String(response);
+                Log.d(TAG, rest_api_id);
                 // called when response HTTP status is "200 OK"
+                getTasks();
             }
 
             @Override
@@ -232,9 +236,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Toast.makeText(MainActivity.this, "Failed request", Toast.LENGTH_LONG).show();
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.d(TAG, "Failed request");
+                Log.d(TAG, "Status: " + statusCode);
                 if (errorResponse != null) {
                     Log.d(TAG, new String(errorResponse));
                 }
+                Log.d(TAG, Log.getStackTraceString(e));
             }
 
             @Override
@@ -247,5 +253,26 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public void onLogOut() {
         finish();
+    }
+
+    public void getTasks() {
+        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+        //asyncHttpClient.setBasicAuth("Authorization: Token", rest_api_id,true);
+        asyncHttpClient.addHeader("Authorization", "Token "+rest_api_id);
+        asyncHttpClient.get(getString(R.string.server_url) + "tasks/", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d(TAG, "Getting tasks succeeded");
+                Log.d(TAG, new String(responseBody));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG, "Getting tasks failed");
+                if (responseBody != null) {
+                    Log.d(TAG, new String(responseBody));
+                }
+            }
+        });
     }
 }
