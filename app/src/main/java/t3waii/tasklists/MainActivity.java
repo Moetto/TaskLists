@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
         fragments.add(new TODOTasksFragment());
 
+
         //TODO: remove
         users.add(new User("Nimi1", "id1"));
         users.add(new User("Nimi2", "id2"));
@@ -66,25 +67,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         locations.add(new Location("Paikka3", 23.24, 35.23));
         locations.add(new Location("Paikka4", 23.24, 35.23));
         locations.add(new Location("Paikka5", 23.24, 35.23));
-        tasks.add(new Task(1, 10));
-        tasks.add(new Task(2, 10));
-        tasks.add(new Task(3, 10));
-        tasks.add(new Task(4, 10));
-        tasks.add(new Task(5, 10));
-        tasks.get(0).setName("Task1");
-        tasks.get(1).setName("Task2");
-        tasks.get(2).setName("Task3");
-        tasks.get(3).setName("Task4");
-        tasks.get(4).setName("Task5");
-        Task childtask = new Task(346, 10);
-        childtask.setName("Childtask1");
-        tasks.get(1).addChild(childtask);
-        childtask = new Task(347, 10);
-        childtask.setName("Childtask2");
-        tasks.get(1).addChild(childtask);
-        childtask = new Task(348, 10);
-        childtask.setName("Childtask3");
-        tasks.get(1).addChild(childtask);
+
 
 
         FragmentManager fragmentManager = getFragmentManager();
