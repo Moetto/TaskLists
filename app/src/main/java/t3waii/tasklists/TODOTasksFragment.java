@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by moetto on 3/11/16.
  */
-public class TODOTasksFragment extends ListFragment {
+public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuItemClickListener {
     public static final String TAG = "TODOTasksFragment";
     public static ArrayAdapter<Task> taskListAdapter;
 
@@ -55,6 +56,7 @@ public class TODOTasksFragment extends ListFragment {
                             Log.d(TAG, "edit clicked");
                             PopupMenu popupMenu = new PopupMenu(getActivity(), v);
                             popupMenu.getMenuInflater().inflate(R.menu.edit_task, popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(TODOTasksFragment.this);
                             popupMenu.show();
                             break;
                         default:
@@ -137,5 +139,25 @@ public class TODOTasksFragment extends ListFragment {
         t = new Task(4, 10);
         t.setName("Task4");
         taskListAdapter.add(t);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        try {
+            Log.d(TAG, item.getActionView().getTag().toString());
+        } catch (Exception e) {
+            Log.d(TAG, "SHIIT");
+        }
+        switch (item.getItemId()) {
+            case R.id.cancel_task:
+                Log.d(TAG, "cancel clicked");
+                return true;
+            case R.id.edit_task:
+                Log.d(TAG, "edit clicked");
+                return true;
+            default:
+                Log.d(TAG, "dunno what was clicked");
+                return false;
+        }
     }
 }
