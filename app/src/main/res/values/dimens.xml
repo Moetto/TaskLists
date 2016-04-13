@@ -11,4 +11,5 @@
     <dimen name="dialog_padding">16dp</dimen>
     <dimen name="managegroup_user_marginbottomtop">6dp</dimen>
     <dimen name="managegroup_location_remove_size">24dp</dimen>
+    <dimen name="complex_task_button_margin">8dp</dimen>
 </resources>

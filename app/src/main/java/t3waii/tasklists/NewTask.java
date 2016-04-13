@@ -48,6 +48,10 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     }
 
     public void clickSaveButton(View v) {
+        //TODO: POST to API and create using that data
+        Task t = new Task(2424, 2);
+        t.setName("New task");
+        TODOTasksFragment.taskListAdapter.add(t);
         //TODO: implement save new task
         finish();
     }

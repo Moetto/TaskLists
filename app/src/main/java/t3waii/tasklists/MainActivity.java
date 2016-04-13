@@ -32,7 +32,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements SignInListener {
 
-    private final static int TAB_COUNT = 1; //TODO: 4
+    private final static int TAB_COUNT = 3; //TODO: 4
     private static final String TAG = "MainActivity";
     private Menu menu;
     FragmentPagerAdapter pagerAdapter;
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public static List<User> users = new ArrayList<>();
     public static List<Location> locations = new ArrayList<>();
-    public static List<Task> tasks = new ArrayList<>();
     public static List<Fragment> fragments = new ArrayList<>();
 
     @Override
@@ -54,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         setSupportActionBar(toolbar);
 
         fragments.add(new TODOTasksFragment());
-
+        fragments.add(new CreatedTasksFragment());
+        fragments.add(new OpenTasksFragment());
 
         //TODO: remove
         users.add(new User("Nimi1", "id1"));
@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         locations.add(new Location("Paikka3", 23.24, 35.23));
         locations.add(new Location("Paikka4", 23.24, 35.23));
         locations.add(new Location("Paikka5", 23.24, 35.23));
-
-
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -229,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
             fragment.setArguments(args);
             return fragment;
         }
-
     }
 
     public void onSignIn() {

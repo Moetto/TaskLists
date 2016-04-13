@@ -1,31 +1,27 @@
 package t3waii.tasklists;
 
-import android.content.Intent;
-import android.os.Bundle;
+        import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Created by moetto on 3/11/16.
+ * Created by matti on 4/13/16.
  */
-public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuItemClickListener {
-    public static final String TAG = "TODOTasksFragment";
+
+public class OpenTasksFragment extends ListFragment {
+    public static final String TAG = "OpenTasksFragment";
     public static ArrayAdapter<Task> taskListAdapter;
 
     @Nullable
@@ -50,21 +46,8 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                     }
 
                     switch (v.getId()) {
-                        case R.id.complete_button:
-                            Log.d(TAG, "complete clicked");
-                            break;
-                        case R.id.edit_button:
-                            Log.d(TAG, "edit clicked");
-                            PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                            popupMenu.getMenuInflater().inflate(R.menu.edit_task, popupMenu.getMenu());
-                            Intent i = new Intent();
-                            i.putExtra("taskId", t.getId());
-                            for(int j = 0; j < popupMenu.getMenu().size(); j++) {
-                                MenuItem menuItem = popupMenu.getMenu().getItem(j);
-                                menuItem.setIntent(i);
-                            }
-                            popupMenu.setOnMenuItemClickListener(TODOTasksFragment.this);
-                            popupMenu.show();
+                        case R.id.claim_button:
+                            Log.d(TAG, "claim clicked");
                             break;
                         default:
                             Log.d(TAG, "Halp, I've been clicked but I don't know where!");
@@ -84,8 +67,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                 }
 
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
-                View claimButton = convertView.findViewById(R.id.claim_button);
-                claimButton.setVisibility(View.GONE);
+                hideUnnecessaryButtons(convertView);
                 addListenerAndTag(convertView, task);
                 TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
                 parentText.setText(task.getName());
@@ -103,16 +85,14 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
 
             private View createComplexTask(LayoutInflater inflater, Task task) {
                 View view = inflater.inflate(R.layout.complex_task, null);
-                View claimButton = view.findViewById(R.id.claim_button);
-                claimButton.setVisibility(View.GONE);
+                hideUnnecessaryButtons(view);
                 addListenerAndTag(view, task);
                 return view;
             }
 
             private View createChildView(LayoutInflater inflater, boolean lastChild, Task childTask) {
                 View view = inflater.inflate(R.layout.child_complex_task, null);
-                View claimButton = view.findViewById(R.id.claim_button);
-                claimButton.setVisibility(View.GONE);
+                hideUnnecessaryButtons(view);
                 if (lastChild){
                     ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
                     imageView.setImageResource(R.drawable.tree_end);
@@ -122,12 +102,16 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
             }
 
             private void addListenerAndTag(View v, Task t) {
-                ImageButton imageButton = (ImageButton) v.findViewById(R.id.edit_button);
+                ImageButton imageButton = (ImageButton) v.findViewById(R.id.claim_button);
                 imageButton.setOnClickListener(handleClick);
                 imageButton.setTag(t);
-                imageButton = (ImageButton) v.findViewById(R.id.complete_button);
-                imageButton.setOnClickListener(handleClick);
-                imageButton.setTag(t);
+            }
+
+            private void hideUnnecessaryButtons(View v) {
+                View completeButton = v.findViewById(R.id.complete_button);
+                completeButton.setVisibility(View.GONE);
+                View editButton = v.findViewById(R.id.edit_button);
+                editButton.setVisibility(View.GONE);
             }
         };
 
@@ -152,23 +136,5 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
         t = new Task(4, 10);
         t.setName("Task4");
         taskListAdapter.add(t);
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        Long taskId = item.getIntent().getLongExtra("taskId", 0);
-        Log.d(TAG, "taskId:" + Long.toString(taskId)); //getActionView().toString()
-
-        switch (item.getItemId()) {
-            case R.id.cancel_task:
-                Log.d(TAG, "cancel clicked");
-                return true;
-            case R.id.edit_task:
-                Log.d(TAG, "edit clicked");
-                return true;
-            default:
-                Log.d(TAG, "dunno what was clicked");
-                return false;
-        }
     }
 }
