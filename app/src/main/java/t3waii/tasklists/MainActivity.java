@@ -32,7 +32,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements SignInListener {
 
-    private final static int TAB_COUNT = 3; //TODO: 4
+    //private final static int TAB_COUNT = 4;
     private static final String TAG = "MainActivity";
     private Menu menu;
     FragmentPagerAdapter pagerAdapter;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         fragments.add(new TODOTasksFragment());
         fragments.add(new CreatedTasksFragment());
         fragments.add(new OpenTasksFragment());
+        fragments.add(new CompletedTasksFragment());
 
         //TODO: remove
         users.add(new User("Nimi1", "id1"));
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
         @Override
         public int getCount() {
-            return TAB_COUNT;
+            return fragments.size();
         }
 
         @Override

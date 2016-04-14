@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by matti on 4/13/16.
+ * Created by matti on 4/14/16.
  */
 
-public class OpenTasksFragment extends ListFragment {
-    public static final String TAG = "OpenTasksFragment";
+public class CompletedTasksFragment extends ListFragment {
+    public static final String TAG = "CompletedTasksFragment";
     public static ArrayAdapter<Task> taskListAdapter;
 
     @Nullable
@@ -34,26 +34,6 @@ public class OpenTasksFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
-            View.OnClickListener handleClick = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Task t = null;
-
-                    try {
-                        t = (Task) v.getTag();
-                    } catch (NullPointerException e) {
-                        Log.d(TAG, "Unable to get Task from tag!");
-                    }
-
-                    switch (v.getId()) {
-                        case R.id.claim_button:
-                            Log.d(TAG, "claim clicked");
-                            break;
-                        default:
-                            Log.d(TAG, "Halp, I've been clicked but I don't know where!");
-                    }
-                }
-            };
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -68,7 +48,6 @@ public class OpenTasksFragment extends ListFragment {
 
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
                 hideUnnecessaryButtons(convertView);
-                addListenerAndTag(convertView, task);
                 TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
                 parentText.setText(task.getName());
 
@@ -86,7 +65,6 @@ public class OpenTasksFragment extends ListFragment {
             private View createComplexTask(LayoutInflater inflater, Task task) {
                 View view = inflater.inflate(R.layout.complex_task, null);
                 hideUnnecessaryButtons(view);
-                addListenerAndTag(view, task);
                 return view;
             }
 
@@ -97,17 +75,12 @@ public class OpenTasksFragment extends ListFragment {
                     ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
                     imageView.setImageResource(R.drawable.tree_end);
                 }
-                addListenerAndTag(view, childTask);
                 return view;
             }
 
-            private void addListenerAndTag(View v, Task t) {
-                ImageButton imageButton = (ImageButton) v.findViewById(R.id.claim_button);
-                imageButton.setOnClickListener(handleClick);
-                imageButton.setTag(t);
-            }
-
             private void hideUnnecessaryButtons(View v) {
+                View claimButton = v.findViewById(R.id.claim_button);
+                claimButton.setVisibility(View.GONE);
                 View completeButton = v.findViewById(R.id.complete_button);
                 completeButton.setVisibility(View.GONE);
                 View editButton = v.findViewById(R.id.edit_button);
