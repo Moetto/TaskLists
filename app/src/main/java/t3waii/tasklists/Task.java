@@ -47,5 +47,5 @@ public class Task {
     public long getId() { return this.id; }
 
     @Override
-    public String toString() { return this.id + ":" + this.name; }
+    public String toString() { return this.name; }
 }

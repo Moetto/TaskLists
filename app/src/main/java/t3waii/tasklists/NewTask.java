@@ -25,6 +25,7 @@ import java.util.Locale;
  * Created by moetto on 3/15/16.
  */
 public class NewTask extends Activity implements View.OnFocusChangeListener {
+    private static final String TAG = "NewTask";
     private EditText dueDate, dueTime;
     private DatePickerDialog dueDateDialog;
     private TimePickerDialog dueTimeDialog;
@@ -53,6 +54,9 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         t.setName("New task");
         TODOTasksFragment.taskListAdapter.add(t);
         //TODO: implement save new task
+        Task parent = (Task) newTaskParentTask.getSelectedItem();
+        Long id = parent.getId();
+        Log.d(TAG, "parentTaskId:" + (id == -1 ? "no parent" : Long.toString(parent.getId())));
         finish();
     }
 
@@ -68,7 +72,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     private void setLocationElement() {
         newTaskLocation = (Spinner) findViewById(R.id.newTaskLocation);
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         //TODO: get values from actual source
         list.add("Home");
         list.add("School");
@@ -76,22 +80,25 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         list.add("Work");
         list.add("Summer home");
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskLocation.setAdapter(dataAdapter);
     }
 
     private void setParentTaskElement() {
         newTaskParentTask = (Spinner) findViewById(R.id.newTaskParentTask);
+        ArrayAdapter<Task> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<Task>());
 
-        List<String> list = new ArrayList<String>();
-        //TODO: get values from actual source
-        list.add("Task 1");
-        list.add("Task 2");
-        list.add("Task 3");
+        Task t = new Task(-1, 0);
+        t.setName("No parent");
+        dataAdapter.add(t);
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        for(int i = 0; i < CreatedTasksFragment.taskListAdapter.getCount(); i++) {
+            dataAdapter.add(CreatedTasksFragment.taskListAdapter.getItem(i));
+        }
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         newTaskParentTask.setAdapter(dataAdapter);
     }
 
@@ -112,7 +119,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 dueDate.setText(dateFormatter.format(newDate.getTime()));
             }
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     //Create TimePickerDialog functionality
@@ -121,7 +128,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         dueTime.setInputType(InputType.TYPE_NULL);
         dueTime.setOnFocusChangeListener(this);
 
-        timeFormatter = new SimpleDateFormat((DateFormat.is24HourFormat(getApplicationContext()) ? "h:mm" : "h:mm a") , Locale.getDefault());
+        timeFormatter = new SimpleDateFormat((DateFormat.is24HourFormat(getApplicationContext()) ? "h:mm" : "h:mm a"), Locale.getDefault());
         Calendar newCalendar = Calendar.getInstance();
 
         dueTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -136,10 +143,10 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if(hasFocus) {
-            if(v == dueDate) {
+        if (hasFocus) {
+            if (v == dueDate) {
                 dueDateDialog.show();
-            } else if(v == dueTime) {
+            } else if (v == dueTime) {
                 dueTimeDialog.show();
             }
         }
