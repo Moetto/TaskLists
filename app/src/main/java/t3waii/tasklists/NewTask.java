@@ -3,6 +3,7 @@ package t3waii.tasklists;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -117,9 +118,19 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
                 dueDate.setText(dateFormatter.format(newDate.getTime()));
+                dueDate.clearFocus();
+                if(dueTime.getText().length() == 0) {
+                    dueTimeDialog.show();
+                }
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        dueDateDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            public void onDismiss(DialogInterface dialog) {
+                dueDate.clearFocus();
+            }
+        });
     }
 
     //Create TimePickerDialog functionality
@@ -128,7 +139,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         dueTime.setInputType(InputType.TYPE_NULL);
         dueTime.setOnFocusChangeListener(this);
 
-        timeFormatter = new SimpleDateFormat((DateFormat.is24HourFormat(getApplicationContext()) ? "h:mm" : "h:mm a"), Locale.getDefault());
+        timeFormatter = new SimpleDateFormat("h:mm a", Locale.getDefault()); //(DateFormat.is24HourFormat(getApplicationContext()) ? "h:mm" : "h:mm a")
         Calendar newCalendar = Calendar.getInstance();
 
         dueTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -137,8 +148,15 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 Calendar newTime = Calendar.getInstance();
                 newTime.set(1, 1, 1970, hourOfDay, minute);
                 dueTime.setText(timeFormatter.format(newTime.getTime()));
+                dueTime.clearFocus();
             }
         }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(getApplicationContext()));
+
+        dueTimeDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            public void onDismiss(DialogInterface dialog) {
+                dueTime.clearFocus();
+            }
+        });
     }
 
     @Override
@@ -150,5 +168,13 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 dueTimeDialog.show();
             }
         }
+    }
+
+    public void clearDateTime(View view) {
+        dueDate.setText("");
+        dueTime.setText("");
+
+        setDueDateDialog();
+        setDueTimeDialog();
     }
 }

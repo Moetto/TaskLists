@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public static List<User> users = new ArrayList<>();
     public static List<Location> locations = new ArrayList<>();
-    public static List<Fragment> fragments = new ArrayList<>();
+    private static List<Fragment> fragments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
