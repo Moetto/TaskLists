@@ -24,6 +24,7 @@
     <string name="current_members">Current members</string>
     <string name="other_users">Other users</string>
     <string name="location">Location</string>
+    <string name="location_name">Location name</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="manage_group_users">Manage group users</string>
     <string name="manage_group_locations">Manage group locations</string>
