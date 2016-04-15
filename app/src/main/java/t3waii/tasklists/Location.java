@@ -1,18 +1,21 @@
 package t3waii.tasklists;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by matti on 4/7/16.
  */
 public class Location {
     private String name;
-    private double longitude, latitude;
+    private LatLng latlng;
 
-    public Location(String name, double longitude, double latitude) {
+    public Location(String name, LatLng latlng) {
         this.name = name;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.latlng = latlng;
     }
 
-    public String getName() { return this.name; }
-    public double[] getCoordinates() { return new double[] {this.latitude, this.latitude}; }
+    @Override
+    public String toString() { return this.name; }
+
+    public LatLng getLatlng() { return this.latlng; }
 }

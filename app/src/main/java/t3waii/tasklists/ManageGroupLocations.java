@@ -44,7 +44,7 @@ public class ManageGroupLocations extends Activity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
+                String toastMsg = String.format("Latlng: %s", place.getLatLng().toString());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }

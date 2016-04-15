@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -63,11 +64,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         users.add(new User("Nimi3", "id3"));
         users.add(new User("Nimi4", "id4"));
         users.add(new User("Nimi5", "id5"));
-        locations.add(new Location("Paikka1", 23.24, 35.23));
-        locations.add(new Location("Paikka2", 23.24, 35.23));
-        locations.add(new Location("Paikka3", 23.24, 35.23));
-        locations.add(new Location("Paikka4", 23.24, 35.23));
-        locations.add(new Location("Paikka5", 23.24, 35.23));
+        locations.add(new Location("Paikka1", new LatLng(24, 23)));
+        locations.add(new Location("Paikka2", new LatLng(34, 33)));
+        locations.add(new Location("Paikka3", new LatLng(44, 43)));
+        locations.add(new Location("Paikka4", new LatLng(54, 53)));
+        locations.add(new Location("Paikka5", new LatLng(64, 63)));
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
