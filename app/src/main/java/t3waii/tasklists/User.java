@@ -5,15 +5,15 @@ package t3waii.tasklists;
  */
 public class User {
     private String name;
-    private String id;
+    private Long id;
 
-    public User(String name, String id) {
+    public User(String name, Long id) {
         this.name = name;
         this.id = id;
     }
 
     public String getName() { return this.name; }
-    public String getId() { return this.id; }
+    public Long getId() { return this.id; }
 
     @Override
     public String toString() {

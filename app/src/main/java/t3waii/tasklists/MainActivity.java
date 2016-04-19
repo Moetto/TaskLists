@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         fragments.add(new CompletedTasksFragment());
 
         //TODO: remove
-        users.add(new User("Nimi1", "id1"));
-        users.add(new User("Nimi2", "id2"));
-        users.add(new User("Nimi3", "id3"));
-        users.add(new User("Nimi4", "id4"));
-        users.add(new User("Nimi5", "id5"));
+        users.add(new User("Nimi1", Long.getLong("1")));
+        users.add(new User("Nimi2", Long.getLong("2")));
+        users.add(new User("Nimi3", Long.getLong("3")));
+        users.add(new User("Nimi4", Long.getLong("4")));
+        users.add(new User("Nimi5", Long.getLong("5")));
         locations.add(new Location("Paikka1", new LatLng(24, 23)));
         locations.add(new Location("Paikka2", new LatLng(34, 33)));
         locations.add(new Location("Paikka3", new LatLng(44, 43)));
@@ -240,9 +240,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Toast.makeText(MainActivity.this, "Successful request", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Successful request");
                 rest_api_id = new String(response);
+                NetworkTasks.setApiId(rest_api_id);
                 Log.d(TAG, rest_api_id);
                 // called when response HTTP status is "200 OK"
-                getTasks();
+                NetworkTasks.setServerAddress(getString(R.string.server_url));
+                NetworkTasks.getTasks();
             }
 
             @Override
@@ -267,26 +269,5 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public void onLogOut() {
         finish();
-    }
-
-    public void getTasks() {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        //asyncHttpClient.setBasicAuth("Authorization: Token", rest_api_id,true);
-        asyncHttpClient.addHeader("Authorization", "Token "+rest_api_id);
-        asyncHttpClient.get(getString(R.string.server_url) + "tasks/", new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.d(TAG, "Getting tasks succeeded");
-                Log.d(TAG, new String(responseBody));
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d(TAG, "Getting tasks failed");
-                if (responseBody != null) {
-                    Log.d(TAG, new String(responseBody));
-                }
-            }
-        });
     }
 }

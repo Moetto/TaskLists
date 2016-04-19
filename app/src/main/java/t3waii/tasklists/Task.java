@@ -2,6 +2,7 @@ package t3waii.tasklists;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public class Task {
     private String name;
-    private Date due;
+    private Date due, estimatedCompletion;
     private List<Task> children;
     private User assignedTo;
     private long id;
@@ -28,6 +29,9 @@ public class Task {
     public Date getDue() { return this.due; }
     public void setDue(Date newDue) { this.due = newDue; }
 
+    public Date getEstimatedCompletion() { return this.estimatedCompletion; }
+    public void setEstimatedCompletion(Date newEstimatedCompletion) { this.estimatedCompletion = newEstimatedCompletion; }
+
     public List<Task> getChildren() { return this.children; }
     public void addChild(Task childTask) { this.children.add(childTask); }
 
@@ -38,6 +42,13 @@ public class Task {
                 return;
             }
         }
+    }
+
+    public void updateTask(Task newValues) {
+        this.name = newValues.getName();
+        this.due = newValues.getDue();
+        this.children = newValues.getChildren();
+        this.assignedTo = newValues.getAssignedTo();
     }
 
     public User getAssignedTo() { return this.assignedTo; }
