@@ -151,24 +151,18 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View promptView = layoutInflater.inflate(R.layout.group_confirm_leave, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // set group_new.xml to be the layout file of the alertdialog builder
-        alertDialogBuilder.setView(promptView);
-        // setup a dialog window
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // get user input and set it to result
-                        //TODO: unregister self from current group
-                        setMainMenuGroupItemsVisibility(false);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        // create an alert dialog
+        alertDialogBuilder.setView(promptView)
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //TODO: unregister self from current group
+                    setMainMenuGroupItemsVisibility(false);
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
         AlertDialog alertD = alertDialogBuilder.create();
         alertD.show();
     }
@@ -178,25 +172,20 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View promptView = layoutInflater.inflate(R.layout.group_new, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // set group_new.xml to be the layout file of the alertdialog builder
         alertDialogBuilder.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.newGroupName);
-        // setup a dialog window
         alertDialogBuilder
-                .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // get user input and set it to result
-                        Log.d("test", "value:" + input.getText());
+                        // TODO: post new group, get name by input.getText()
                         setMainMenuGroupItemsVisibility(true);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        // create an alert dialog
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
         AlertDialog alertD = alertDialogBuilder.create();
         alertD.show();
     }
