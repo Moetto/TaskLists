@@ -12,7 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.Dictionary;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -40,12 +40,13 @@ public class NetworkTasks {
 
     }
 
-    public static void postNewTask(Dictionary<String, String> values) {
+    public static void postNewTask(Map<String, String> values) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + API_ID);
         RequestParams params = new RequestParams();
-        params.add("title", "Task1");
-        params.add("description", "Task 1 description");
+        for(String key : values.keySet()) {
+            params.add(key, values.get(key));
+        }
         asyncHttpClient.post(SERVER_ADDRESS + "tasks/", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

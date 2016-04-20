@@ -10,19 +10,21 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by moetto on 3/15/16.
@@ -50,59 +52,88 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     }
 
     public void clickSaveButton(View v) {
-        //TODO: POST to API and create using that data
-        Dictionary<String, String> values = new Hashtable<>();
-        // TODO: get values and insert to values
+        Map<String, String> values = new HashMap<>();
 
-        Task t = new Task(2424, 2);
-        t.setName("New task");
-        OpenTasksFragment.openTasks.add(t);
-        //TODO: implement save new task
+        EditText name = (EditText) findViewById(R.id.newTaskName);
+        String title = name.getText().toString();
+        values.put("title", title);
+        values.put("description", title);
+
+        if(dueDate.getText().toString().length() > 0 || dueTime.getText().toString().length() > 0) {
+            Calendar c = Calendar.getInstance(Locale.getDefault());
+
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DATE);
+            int hour = 23;
+            int minute = 59;
+
+            if(dueDate.getText().toString().length() > 0) {
+                Calendar date = Calendar.getInstance(Locale.getDefault());
+                date.setTime(dateFormatter.parse(dueDate.getText().toString(), new ParsePosition(0)));
+                year = date.get(Calendar.YEAR);
+                month = date.get(Calendar.MONTH);
+                day = date.get(Calendar.DATE);
+            }
+
+            if(dueTime.getText().toString().length() > 0) {
+                Calendar time = Calendar.getInstance();
+                time.setTime(timeFormatter.parse(dueTime.getText().toString(), new ParsePosition(0)));
+                hour = time.get(Calendar.HOUR_OF_DAY);
+                minute = time.get(Calendar.MINUTE);
+            }
+
+            c.set(year, month, day, hour, minute, 0);
+            values.put("deadline", Long.toString(c.getTimeInMillis()));
+        }
+
+        User u = (User) newTaskAssignedTo.getSelectedItem();
+        if(u.getId() > 0) { values.put("responsible_member", Long.toString(u.getId())); }
+
+        Location l = (Location) newTaskLocation.getSelectedItem();
+        if(l.getId() > 0) { values.put("location", Long.toString(l.getId())); }
+
         Task parent = (Task) newTaskParentTask.getSelectedItem();
         Long id = parent.getId();
-        Log.d(TAG, "parentTaskId:" + (id == -1 ? "no parent" : Long.toString(parent.getId())));
+        if(id != -1) { values.put("parent", Long.toString(id)); }
+
+        Log.d(TAG, values.toString());
+
         NetworkTasks.postNewTask(values);
         finish();
     }
 
     private void setAssignedToElement() {
         newTaskAssignedTo = (Spinner) findViewById(R.id.newTaskAssignedTo);
-
-        ArrayAdapter<User> dataAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_spinner_item, MainActivity.users);
+        List<User> users = new ArrayList<>(MainActivity.users);
+        users.add(0, new User("Not assigned", Long.valueOf(0)));
+        ArrayAdapter<User> dataAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_spinner_item, users);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskAssignedTo.setAdapter(dataAdapter);
     }
 
     private void setLocationElement() {
         newTaskLocation = (Spinner) findViewById(R.id.newTaskLocation);
-
-        List<String> list = new ArrayList<>();
-        //TODO: get values from actual source
-        list.add("Home");
-        list.add("School");
-        list.add("Garage");
-        list.add("Work");
-        list.add("Summer home");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-
+        List<Location> locations = new ArrayList<>(MainActivity.locations);
+        locations.add(0, new Location(Long.valueOf(0), "No location", new LatLng(0, 0)));
+        ArrayAdapter<Location> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskLocation.setAdapter(dataAdapter);
     }
 
     private void setParentTaskElement() {
-        newTaskParentTask = (Spinner) findViewById(R.id.newTaskParentTask);
-        ArrayAdapter<Task> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<Task>());
+        List<Task> createdTasks = new ArrayList<>();
 
-        Task t = new Task(-1, 0);
-        t.setName("No parent");
-        dataAdapter.add(t);
+        Task noParent = new Task(-1, 0);
+        noParent.setName("No parent");
+        createdTasks.add(noParent);
 
         for(int i = 0; i < CreatedTasksFragment.taskListAdapter.getCount(); i++) {
-            dataAdapter.add(CreatedTasksFragment.taskListAdapter.getItem(i));
+            createdTasks.add(CreatedTasksFragment.taskListAdapter.getItem(i));
         }
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        newTaskParentTask = (Spinner) findViewById(R.id.newTaskParentTask);
+        ArrayAdapter<Task> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, createdTasks);
         newTaskParentTask.setAdapter(dataAdapter);
     }
 
