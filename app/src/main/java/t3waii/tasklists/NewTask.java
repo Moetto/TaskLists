@@ -143,7 +143,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         dueTime.setOnFocusChangeListener(this);
 
         timeFormatter = new SimpleDateFormat("h:mm a", Locale.getDefault()); //(DateFormat.is24HourFormat(getApplicationContext()) ? "h:mm" : "h:mm a")
-        Calendar newCalendar = Calendar.getInstance();
+        Calendar newCalendar = Calendar.getInstance(Locale.getDefault());
 
         dueTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -153,7 +153,8 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 dueTime.setText(timeFormatter.format(newTime.getTime()));
                 dueTime.clearFocus();
             }
-        }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(getApplicationContext()));
+        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(getApplicationContext()));
+
 
         dueTimeDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
