@@ -37,8 +37,6 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
     private Spinner newTaskParentTask, newTaskAssignedTo, newTaskLocation;
 
-    private Button newTaskSave;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_new_task);
