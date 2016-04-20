@@ -118,7 +118,7 @@ public class ManageGroupLocations extends Activity {
         View promptView = layoutInflater.inflate(R.layout.group_new, null);
         TextView textLabel = (TextView)promptView.findViewById(R.id.textLabel);
         textLabel.setText(getResources().getString(R.string.location_name));
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.NameDialogCustom);
         alertDialogBuilder.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.newGroupName);
         // setup a dialog window
