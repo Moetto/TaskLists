@@ -8,14 +8,18 @@ import com.google.android.gms.maps.model.LatLng;
 public class Location {
     private String name;
     private LatLng latlng;
+    private Long id;
 
-    public Location(String name, LatLng latlng) {
+    public Location(Long id, String name, LatLng latlng) {
+        this.id = id;
         this.name = name;
         this.latlng = latlng;
     }
 
     @Override
     public String toString() { return this.name; }
+
+    public Long getId() { return this.id; }
 
     public LatLng getLatlng() { return this.latlng; }
 }

@@ -127,8 +127,8 @@ public class ManageGroupLocations extends Activity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // get user input and set it to result
-                        // TODO: post new group, get name by input.getText().toString()
-                        locationListAdapter.add(new Location(input.getText().toString(), location));
+                        // TODO: post new location, get name by input.getText().toString()
+                        locationListAdapter.add(new Location(Long.valueOf(0), input.getText().toString(), location));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
