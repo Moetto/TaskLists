@@ -53,19 +53,22 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
     public void clickSaveButton(View v) {
         //TODO: POST to API and create using that data
+        Dictionary<String, String> values = new Hashtable<>();
+        // TODO: get values and insert to values
+
         Task t = new Task(2424, 2);
         t.setName("New task");
-        TODOTasksFragment.taskListAdapter.add(t);
+        OpenTasksFragment.openTasks.add(t);
         //TODO: implement save new task
         Task parent = (Task) newTaskParentTask.getSelectedItem();
         Long id = parent.getId();
         Log.d(TAG, "parentTaskId:" + (id == -1 ? "no parent" : Long.toString(parent.getId())));
+        NetworkTasks.postNewTask(values);
         finish();
     }
 
     private void setAssignedToElement() {
         newTaskAssignedTo = (Spinner) findViewById(R.id.newTaskAssignedTo);
-
 
         ArrayAdapter<User> dataAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_spinner_item, MainActivity.users);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

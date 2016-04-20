@@ -99,8 +99,8 @@ public class NetworkTasks {
 
                     boolean taskUpdated = false;
 
-                    for(int j = 0; j < OpenTasksFragment.taskListAdapter.getCount(); j++) {
-                        Task t = OpenTasksFragment.taskListAdapter.getItem(j);
+                    for(int j = 0; j < OpenTasksFragment.openTasks.size(); j++) {
+                        Task t = OpenTasksFragment.openTasks.get(j);
                         if(t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
                             t.updateTask(task);
                             taskUpdated = true;
@@ -110,9 +110,10 @@ public class NetworkTasks {
                     }
 
                     if(!taskUpdated) {
-                        OpenTasksFragment.taskListAdapter.add(task);
+                        OpenTasksFragment.openTasks.add(task);
                     }
                 }
+                MainActivity.updateDatasets();
             }
 
             @Override

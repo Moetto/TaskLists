@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -137,6 +139,17 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return super.onOptionsItemSelected(item);
     }
 
+    public static void updateDatasets() {
+        for(Fragment f : fragments) {
+            try {
+                ListFragment lf = (ListFragment) f;
+                ArrayAdapter adapter = (ArrayAdapter) lf.getListAdapter();
+                adapter.notifyDataSetChanged();
+            } catch (NullPointerException e) {
+                continue;
+            }
+        }
+    }
 
     // When user is in group, hide new group menu item and show manage group and leave group.
     private void setMainMenuGroupItemsVisibility(boolean isInGroup) {

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class OpenTasksFragment extends ListFragment {
     public static final String TAG = "OpenTasksFragment";
-    public static ArrayAdapter<Task> taskListAdapter;
+    public static List<Task> openTasks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -33,7 +33,7 @@ public class OpenTasksFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, openTasks) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -58,7 +58,7 @@ public class OpenTasksFragment extends ListFragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = taskListAdapter.getItem(position);
+                Task task = openTasks.get(position);
                 if(task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
@@ -117,5 +117,6 @@ public class OpenTasksFragment extends ListFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+
     }
 }
