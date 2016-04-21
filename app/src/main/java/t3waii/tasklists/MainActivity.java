@@ -168,8 +168,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         alertDialogBuilder.setView(promptView)
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    //TODO: unregister self from current group
-                    setMainMenuGroupItemsVisibility(false);
+                    NetworkGroups.leaveGroup(menu);
                 }
             })
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -191,9 +190,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         alertDialogBuilder
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // TODO: post new group, get name by input.getText()
-                        setMainMenuGroupItemsVisibility(true);
-                }
+                        NetworkGroups.postNewGroup(input.getText().toString(), menu);
+
+                    }
             })
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
