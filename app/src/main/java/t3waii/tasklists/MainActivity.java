@@ -62,16 +62,16 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         fragments.add(new CompletedTasksFragment());
 
         //TODO: remove
-        users.add(new User("Nimi1", Long.valueOf(1)));
-        users.add(new User("Nimi2", Long.valueOf(2)));
-        users.add(new User("Nimi3", Long.valueOf(3)));
-        users.add(new User("Nimi4", Long.valueOf(4)));
-        users.add(new User("Nimi5", Long.valueOf(5)));
-        locations.add(new Location(Long.valueOf(1), "Paikka1", new LatLng(24, 23)));
-        locations.add(new Location(Long.valueOf(2), "Paikka2", new LatLng(34, 33)));
-        locations.add(new Location(Long.valueOf(3), "Paikka3", new LatLng(44, 43)));
-        locations.add(new Location(Long.valueOf(4), "Paikka4", new LatLng(54, 53)));
-        locations.add(new Location(Long.valueOf(5), "Paikka5", new LatLng(64, 63)));
+        users.add(new User("Nimi1", (long) 1));
+        users.add(new User("Nimi2", (long) 2));
+        users.add(new User("Nimi3", (long) 3));
+        users.add(new User("Nimi4", (long) 4));
+        users.add(new User("Nimi5", (long) 5));
+        locations.add(new Location((long) 1, "Paikka1", new LatLng(24, 23)));
+        locations.add(new Location((long) 2, "Paikka2", new LatLng(34, 33)));
+        locations.add(new Location((long) 3, "Paikka3", new LatLng(44, 43)));
+        locations.add(new Location((long) 4, "Paikka4", new LatLng(54, 53)));
+        locations.add(new Location((long) 5, "Paikka5", new LatLng(64, 63)));
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
