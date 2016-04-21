@@ -37,12 +37,13 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     //private final static int TAB_COUNT = 4;
     private static final String TAG = "MainActivity";
+    private static String apiId = "";
+    private static String serverAddress = "";
     private Menu menu;
     FragmentPagerAdapter pagerAdapter;
     ViewPager pager;
     TabLayout tabs;
     String ACCOUNT_MANAGER = "accountmanager";
-    private String rest_api_id;
 
     public static List<User> users = new ArrayList<>();
     public static List<Location> locations = new ArrayList<>();
@@ -250,13 +251,12 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
                 Toast.makeText(MainActivity.this, "Successful request", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Successful request");
-                rest_api_id = new String(response);
-                NetworkTasks.setApiId(rest_api_id);
-                Log.d(TAG, rest_api_id);
-                // called when response HTTP status is "200 OK"
-                NetworkTasks.setServerAddress(getString(R.string.server_url));
+                apiId = new String(response);
+                Log.d(TAG, apiId);
+                serverAddress = getString(R.string.server_url);
                 NetworkTasks.getTasks();
             }
 
@@ -283,4 +283,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     public void onLogOut() {
         finish();
     }
+
+    public static String getApiId() { return apiId; }
+    public static String getServerAddress() { return serverAddress; }
 }

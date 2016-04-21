@@ -21,13 +21,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class NetworkTasks {
     private final static String TAG = "NetworkTasks";
-    private static String API_ID = "";
-    private static String SERVER_ADDRESS = "";
-
-    public static void setApiId(String apiId) {
-        API_ID = apiId;
-    }
-    public static void setServerAddress(String serverAddress) { SERVER_ADDRESS = serverAddress; }
 
     private void register() {
         new AsyncTask<Void, Void, Void>(){
@@ -42,12 +35,12 @@ public class NetworkTasks {
 
     public static void postNewTask(Map<String, String> values) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("Authorization", "Token " + API_ID);
+        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         RequestParams params = new RequestParams();
         for(String key : values.keySet()) {
             params.add(key, values.get(key));
         }
-        asyncHttpClient.post(SERVER_ADDRESS + "tasks/", params, new AsyncHttpResponseHandler() {
+        asyncHttpClient.post(MainActivity.getServerAddress() + "tasks/", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Post new task succeeded");
@@ -66,8 +59,8 @@ public class NetworkTasks {
 
     public static void getTasks() {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("Authorization", "Token " + API_ID);
-        asyncHttpClient.get(SERVER_ADDRESS + "tasks/", new AsyncHttpResponseHandler() {
+        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
+        asyncHttpClient.get(MainActivity.getServerAddress() + "tasks/", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Getting tasks succeeded");
