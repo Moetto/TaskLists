@@ -1,15 +1,19 @@
 package t3waii.tasklists;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,26 +32,31 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity implements SignInListener {
+public class MainActivity extends AppCompatActivity implements SignInListener, NetworkListener {
 
     //private final static int TAB_COUNT = 4;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "TasksMainActivity";
+    private static final int READ_PHONE_STATE_PERMISSION_CHECK = 100;
     private static String apiId = "";
-    private static String serverAddress = "";
+    private static String serverAddress;
     private Menu menu;
     FragmentPagerAdapter pagerAdapter;
     ViewPager pager;
     TabLayout tabs;
     String ACCOUNT_MANAGER = "accountmanager";
-
+    private static final int register = 1000;
     public static List<User> users = new ArrayList<>();
     public static List<Location> locations = new ArrayList<>();
     private static List<Fragment> fragments = new ArrayList<>();
+    private int selfGroupMemberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 startActivity(new Intent(MainActivity.this, NewTask.class));
             }
         });
+        serverAddress = getString(R.string.server_url);
     }
 
     @Override
@@ -141,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     }
 
     public static void updateDatasets() {
-        for(Fragment f : fragments) {
+        for (Fragment f : fragments) {
             try {
                 ListFragment lf = (ListFragment) f;
                 ArrayAdapter adapter = (ArrayAdapter) lf.getListAdapter();
@@ -166,16 +176,16 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         View promptView = layoutInflater.inflate(R.layout.group_confirm_leave, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.NameDialogCustom);
         alertDialogBuilder.setView(promptView)
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    NetworkGroups.leaveGroup(menu);
-                }
-            })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NetworkGroups.leaveGroup(menu);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
         AlertDialog alertD = alertDialogBuilder.create();
         alertD.show();
     }
@@ -193,14 +203,31 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         NetworkGroups.postNewGroup(input.getText().toString(), menu);
 
                     }
-            })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
         AlertDialog alertD = alertDialogBuilder.create();
         alertD.show();
+    }
+
+    @Override
+    public void onNetworkOperationSuccess(int requestCode, String response) {
+        //TODO add support for other activites
+        if (requestCode == register) {
+            try {
+                JSONObject responseAsJson = new JSONObject(response);
+                apiId = responseAsJson.getString("token");
+                selfGroupMemberId = responseAsJson.getInt("group_member_id");
+                Log.d(TAG, "" + selfGroupMemberId);
+                NetworkTasks.getTasks();
+                NetworkLocations.getLocations();
+            } catch (JSONException ex) {
+                Log.e(TAG, "Invalid json from register");
+            }
+        }
     }
 
     public static class TabAdapter extends FragmentPagerAdapter {
@@ -221,7 +248,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                     "Open",
                     "Complete"
             };
-            return titles[position];
+            try {
+                return titles[position];
+            } catch (IndexOutOfBoundsException ex) {
+                return "Wappu";
+            }
         }
 
         @Override
@@ -235,55 +266,23 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public void onSignIn() {
         Log.d(TAG, "Signed in");
-        GoogleAccountManager accountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
         //Toast.makeText(this, accountManager.getGoogleId(), Toast.LENGTH_LONG).show();
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams("token", accountManager.getGoogleToken());
-        Log.d(TAG, params.toString());
-        client.post(getString(R.string.server_url) + "register/", params, new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                // called when response HTTP status is "200 OK"
-                Toast.makeText(MainActivity.this, "Successful request", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Successful request");
-                apiId = new String(response);
-                Log.d(TAG, apiId);
-                serverAddress = getString(R.string.server_url);
-                NetworkTasks.getTasks();
-                NetworkLocations.getLocations();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                Toast.makeText(MainActivity.this, "Failed request", Toast.LENGTH_LONG).show();
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG, "Failed request");
-                Log.d(TAG, "Status: " + statusCode);
-                if (errorResponse != null) {
-                    Log.d(TAG, new String(errorResponse));
-                }
-                Log.d(TAG, Log.getStackTraceString(e));
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-            }
-        });
-
+        register();
+    }
+    public void register() {
+        GoogleAccountManager accountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
+        NetworkRegister.register(this, accountManager.getGoogleToken(), register, this);
     }
 
     public void onLogOut() {
         finish();
     }
 
-    public static String getApiId() { return apiId; }
-    public static String getServerAddress() { return serverAddress; }
+    public static String getApiId() {
+        return apiId;
+    }
+
+    public static String getServerAddress() {
+        return serverAddress;
+    }
 }

@@ -53,6 +53,7 @@ public class GoogleAccountManager extends Fragment implements
                 .requestIdToken("727690215041-1oa6sfgn9u225i7m4gkrmkscmlojlqg5.apps.googleusercontent.com")
                 //.requestIdToken("AIzaSyC6da_h7dhxx-BM9eNH1rPqpO9GYiDkF6o")
                 //.requestIdToken("727690215041-mh8m0nest502p77vr63iuklqubrkvfml.apps.googleusercontent.com")
+                //.requestIdToken("727690215041-4nkr29ftd2eishnqr1eb4ljbn3m2bhqu.apps.googleusercontent.com")
                 .build();
         // [END configure_signin]
 
@@ -86,6 +87,7 @@ public class GoogleAccountManager extends Fragment implements
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
+                    Log.d(TAG, googleSignInResult.toString());
                     handleSignInResult(googleSignInResult);
                 }
             });
@@ -99,6 +101,7 @@ public class GoogleAccountManager extends Fragment implements
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, ""+resultCode);
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
