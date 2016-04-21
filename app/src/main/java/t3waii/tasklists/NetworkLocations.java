@@ -1,6 +1,5 @@
 package t3waii.tasklists;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -13,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,9 +45,7 @@ public class NetworkLocations  {
                 Location l = parseLocation(jsonLocation);
                 if(l != null) {
                     MainActivity.locations.add(l);
-                    if(ManageGroupLocations.locationListAdapter != null) {
-                        ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
-                    }
+                    updateDatasets();
                     //TODO: notify other group members of new location
                 }
             }
@@ -130,9 +126,7 @@ public class NetworkLocations  {
                     }
                 }
 
-                if (ManageGroupLocations.locationListAdapter != null) {
-                    ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
-                }
+                updateDatasets();
             }
 
             @Override
@@ -153,9 +147,7 @@ public class NetworkLocations  {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete location succeeded");
                 MainActivity.locations.remove(location);
-                if (ManageGroupLocations.locationListAdapter != null) {
-                    ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
-                }
+                updateDatasets();
             }
 
             @Override
@@ -166,6 +158,12 @@ public class NetworkLocations  {
                 }
             }
         });
+    }
+
+    private static void updateDatasets() {
+        if (ManageGroupLocations.locationListAdapter != null) {
+            ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
+        }
     }
 
     // Parse Location information from json and return it as Location object
