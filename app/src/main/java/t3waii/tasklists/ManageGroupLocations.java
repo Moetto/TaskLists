@@ -22,6 +22,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by matti on 4/1/16.
@@ -52,7 +54,7 @@ public class ManageGroupLocations extends Activity {
         });
 
         if(locationListAdapter == null) {
-            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, new ArrayList<Location>()) {
+            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, MainActivity.locations) {
                 View.OnClickListener handleClick = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -66,9 +68,8 @@ public class ManageGroupLocations extends Activity {
 
                         switch (v.getId()) {
                             case R.id.remove_location:
-                                // TODO: send delete and remove from list on success
                                 if(l != null) {
-                                    locationListAdapter.remove(l);
+                                    NetworkLocations.deleteLocation(l);
                                 }
                                 break;
                             default:
@@ -126,8 +127,12 @@ public class ManageGroupLocations extends Activity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // get user input and set it to result
-                        // TODO: post new location, get name by input.getText().toString()
-                        locationListAdapter.add(new Location(Long.valueOf(0), input.getText().toString(), location));
+                        Map<String, String> values = new HashMap<>();
+                        values.put("name", input.getText().toString());
+                        values.put("latitude", Double.toString(location.latitude));
+                        values.put("longitude", Double.toString(location.longitude));
+                        NetworkLocations.postNewLocation(values);
+                        //locationListAdapter.add(new Location(Long.valueOf(0), input.getText().toString(), location));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

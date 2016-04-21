@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Log.d(TAG, apiId);
                 serverAddress = getString(R.string.server_url);
                 NetworkTasks.getTasks();
+                NetworkLocations.getLocations();
             }
 
             @Override
