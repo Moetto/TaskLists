@@ -91,6 +91,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "727690215041-4nkr29ftd2eishnqr1eb4ljbn3m2bhqu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "t3waii.tasklists",
+            "certificate_hash": "BF142B0C3AFF1F3D28DDB200C521F2E313FB0BDB"
+          }
+        },
+        {
           "client_id": "727690215041-qpgk85c6iaerhhcgstum3jqa9lg5u0rd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
