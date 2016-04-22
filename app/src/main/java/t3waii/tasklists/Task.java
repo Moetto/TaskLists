@@ -15,6 +15,8 @@ public class Task {
     private User assignedTo;
     private long id;
     private int creator;
+    private double longitude;
+    private double latitude;
 
     public Task(long id, int creator) {
         this.id = id;
@@ -59,4 +61,20 @@ public class Task {
 
     @Override
     public String toString() { return this.name; }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

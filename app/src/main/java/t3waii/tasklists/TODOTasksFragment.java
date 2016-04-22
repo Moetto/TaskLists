@@ -1,9 +1,15 @@
 package t3waii.tasklists;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,12 +19,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.Manifest;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+
+import java.security.Permission;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -26,7 +41,11 @@ import java.util.List;
  */
 public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuItemClickListener {
     public static final String TAG = "TODOTasksFragment";
+    private static final int LOCATION_PERMISSION_REQUEST = 11;
     public static ArrayAdapter<Task> taskListAdapter;
+    private GoogleApiClient googleApiClient;
+    private PendingIntent geofencePendingIntent;
+    private Set<Task> tasksPendingGeofence = new HashSet<>();
 
     @Nullable
     @Override
@@ -37,6 +56,11 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        googleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+
         taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
@@ -59,7 +83,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                             popupMenu.getMenuInflater().inflate(R.menu.edit_task, popupMenu.getMenu());
                             Intent i = new Intent();
                             i.putExtra("taskId", t.getId());
-                            for(int j = 0; j < popupMenu.getMenu().size(); j++) {
+                            for (int j = 0; j < popupMenu.getMenu().size(); j++) {
                                 MenuItem menuItem = popupMenu.getMenu().getItem(j);
                                 menuItem.setIntent(i);
                             }
@@ -76,7 +100,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 Task task = taskListAdapter.getItem(position);
-                if(task.getChildren().isEmpty()) {
+                if (task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
                     textView.setText(task.getName());
@@ -92,16 +116,17 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
 
                 LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
                 List<Task> children = task.getChildren();
-                for(int i = 0; i < children.size(); i++) {
-                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size()-1) ? true : false), children.get(i));
+                for (int i = 0; i < children.size(); i++) {
+                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size() - 1) ? true : false), children.get(i));
                     TextView textView = (TextView) childView.findViewById(R.id.complex_text);
                     textView.setText(children.get(i).getName());
-                    linearLayout.addView(childView, (i+1));
+                    linearLayout.addView(childView, (i + 1));
                 }
                 return convertView;
             }
 
             private View createComplexTask(LayoutInflater inflater, Task task) {
+                addGeoFenceIfAvailable(task);
                 View view = inflater.inflate(R.layout.complex_task, null);
                 View claimButton = view.findViewById(R.id.claim_button);
                 claimButton.setVisibility(View.GONE);
@@ -113,8 +138,8 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                 View view = inflater.inflate(R.layout.child_complex_task, null);
                 View claimButton = view.findViewById(R.id.claim_button);
                 claimButton.setVisibility(View.GONE);
-                if (lastChild){
-                    ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
+                if (lastChild) {
+                    ImageView imageView = (ImageView) view.findViewById(R.id.arrow);
                     imageView.setImageResource(R.drawable.tree_end);
                 }
                 addListenerAndTag(view, childTask);
@@ -136,12 +161,14 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
 
         Task t = new Task(1, 10);
         t.setName("Task1");
+        t.setLatitude(65.0590557);
+        t.setLongitude(25.4796508);
         taskListAdapter.add(t);
         t = new Task(2, 10);
         t.setName("Task2");
         Task t2 = new Task(100, 10);
         t2.setName("Child1");
-        t.addChild(t2);;
+        t.addChild(t2);
         t2 = new Task(101, 10);
         t2.setName("Child2");
         t.addChild(t2);
@@ -152,6 +179,87 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
         t = new Task(4, 10);
         t.setName("Task4");
         taskListAdapter.add(t);
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(getContext(), GeofenceIntentService.class);
+        geofencePendingIntent = PendingIntent.getService(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
+    }
+
+    private void addPendingGeofences() {
+        for (Task task : tasksPendingGeofence) {
+            addGeoFence(task);
+            tasksPendingGeofence.remove(task);
+        }
+    }
+
+    private void addGeoFenceIfAvailable(Task task) {
+        if (task.getLatitude() == 0 || task.getLongitude() == 0) {
+            return;
+        }
+
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            tasksPendingGeofence.add(task);
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+        } else {
+            addGeoFence(task);
+        }
+    }
+
+    private void addGeoFence(Task task) {
+        new AsyncTask<Task, Void, Void>() {
+            @Override
+            protected Void doInBackground(Task... params) {
+                Task task = params[0];
+
+                Geofence geofence = new Geofence.Builder()
+                        .setRequestId("" + task.getId())
+                        .setCircularRegion(
+                                task.getLatitude(),
+                                task.getLongitude(),
+                                1000)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .setLoiteringDelay(1000)
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .build();
+
+                GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
+                        .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL | GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                        .addGeofence(geofence)
+                        .build();
+
+                if (googleApiClient.blockingConnect().isSuccess() &&
+                        ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    LocationServices.GeofencingApi.addGeofences(googleApiClient, geofencingRequest, getGeofencePendingIntent());
+                    Log.d(TAG, "Added geofence");
+
+                } else {
+                    Log.d(TAG, "Adding geofence failed");
+                }
+                return null;
+            }
+        }.execute(task);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                addPendingGeofences();
+            }
+        }
+    }
+
+    public void removeGeoFence(Task task) {
+
     }
 
     @Override

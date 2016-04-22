@@ -43,6 +43,10 @@
         <activity android:name=".NewTask" />
         <activity android:name=".ManageGroupActivity" />
         <activity android:name=".ManageGroupLocations" />
+        <service android:name=".GeofenceIntentService"
+            android:exported="true"/>
+        <application/>
+
 
         <meta-data
             android:name="com.google.android.gms.version"
