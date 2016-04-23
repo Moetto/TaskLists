@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
     public static List<User> users = new ArrayList<>();
     public static List<Location> locations = new ArrayList<>();
     private static List<Fragment> fragments = new ArrayList<>();
-    private int selfGroupMemberId;
+    private static User selfGroupMember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         return super.onOptionsItemSelected(item);
     }
 
+    public static User getSelfGroupMember() { return selfGroupMember; }
+
     public static void updateDatasets() {
         for (Fragment f : fragments) {
             try {
@@ -211,8 +213,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
             try {
                 JSONObject responseAsJson = new JSONObject(response);
                 apiId = responseAsJson.getString("token");
-                selfGroupMemberId = responseAsJson.getInt("group_member_id");
-                Log.d(TAG, "" + selfGroupMemberId);
+                selfGroupMember = new User("Me", responseAsJson.getLong("group_member_id"));
+                Log.d(TAG, "" + selfGroupMember.getId());
                 NetworkTasks.getTasks();
                 NetworkLocations.getLocations();
             } catch (JSONException ex) {
