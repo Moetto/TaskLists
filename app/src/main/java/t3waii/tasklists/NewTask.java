@@ -107,6 +107,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         newTaskAssignedTo = (Spinner) findViewById(R.id.newTaskAssignedTo);
         List<User> users = new ArrayList<>(MainActivity.users);
         users.add(0, new User("Not assigned", Long.valueOf(0)));
+        users.add(1, MainActivity.getSelfGroupMember());
         ArrayAdapter<User> dataAdapter = new ArrayAdapter<User>(this, android.R.layout.simple_spinner_item, users);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskAssignedTo.setAdapter(dataAdapter);
@@ -124,7 +125,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     private void setParentTaskElement() {
         List<Task> createdTasks = new ArrayList<>();
 
-        Task noParent = new Task(-1, 0);
+        Task noParent = new Task(-1, new User("", (long) 0));
         noParent.setName("No parent");
         createdTasks.add(noParent);
 

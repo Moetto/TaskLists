@@ -14,11 +14,11 @@ public class Task {
     private List<Task> children;
     private User assignedTo;
     private long id;
-    private int creator;
+    private User creator;
     private double longitude;
     private double latitude;
 
-    public Task(long id, int creator) {
+    public Task(long id, User creator) {
         this.id = id;
         this.creator = creator;
         this.name = "";
@@ -56,7 +56,7 @@ public class Task {
     public User getAssignedTo() { return this.assignedTo; }
     public void setAssignedTo(User newAssignedTo) { this.assignedTo = newAssignedTo; }
 
-    public int getCreator() { return this.creator; }
+    public User getCreator() { return this.creator; }
     public long getId() { return this.id; }
 
     @Override
