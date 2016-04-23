@@ -38,7 +38,7 @@ public class NetworkTasks {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Post new task succeeded");
                 String response = new String(responseBody);
-                Log.d(TAG, new String(responseBody));
+                Log.d(TAG, response);
                 Intent intent = new Intent();
                 intent.setAction(ACTION_POST_TASK);
                 intent.putExtra(EXTRA_TASK_AS_JSON_STRING, response);
@@ -79,10 +79,6 @@ public class NetworkTasks {
                             Log.d(TAG, "task updated!");
                             break;
                         }
-                    }
-
-                    if(!taskUpdated) {
-                        OpenTasksFragment.openTasks.add(task);
                     }
                 }
                 MainActivity.updateDatasets();

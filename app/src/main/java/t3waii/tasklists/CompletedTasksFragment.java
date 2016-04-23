@@ -20,9 +20,8 @@ import java.util.List;
  * Created by matti on 4/14/16.
  */
 
-public class CompletedTasksFragment extends ListFragment {
+public class CompletedTasksFragment extends TasksFragment {
     public static final String TAG = "CompletedTasksFragment";
-    public static ArrayAdapter<Task> taskListAdapter;
 
     @Nullable
     @Override
@@ -33,12 +32,12 @@ public class CompletedTasksFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = taskListAdapter.getItem(position);
+                Task task = tasks.get(position);
                 if(task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
@@ -90,24 +89,5 @@ public class CompletedTasksFragment extends ListFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
-
-        Task t = new Task(1, 10);
-        t.setName("Task1");
-        taskListAdapter.add(t);
-        t = new Task(2, 10);
-        t.setName("Task2");
-        Task t2 = new Task(100, 10);
-        t2.setName("Child1");
-        t.addChild(t2);;
-        t2 = new Task(101, 10);
-        t2.setName("Child2");
-        t.addChild(t2);
-        taskListAdapter.add(t);
-        t = new Task(3, 10);
-        t.setName("Task3");
-        taskListAdapter.add(t);
-        t = new Task(4, 10);
-        t.setName("Task4");
-        taskListAdapter.add(t);
     }
 }

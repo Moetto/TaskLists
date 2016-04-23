@@ -36,10 +36,9 @@ import java.util.Set;
 /**
  * Created by moetto on 3/11/16.
  */
-public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuItemClickListener {
+public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenuItemClickListener {
     public static final String TAG = "TODOTasksFragment";
     private static final int LOCATION_PERMISSION_REQUEST = 11;
-    public static ArrayAdapter<Task> taskListAdapter;
     private GoogleApiClient googleApiClient;
     private PendingIntent geofencePendingIntent;
     private Set<Task> tasksPendingGeofence = new HashSet<>();
@@ -58,7 +57,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                 .build();
         googleApiClient.connect();
 
-        taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,7 +95,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = taskListAdapter.getItem(position);
+                Task task = tasks.get(position);
                 if (task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
@@ -155,27 +154,6 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
-
-        Task t = new Task(1, 10);
-        t.setName("Task1");
-        t.setLatitude(65.0590557);
-        t.setLongitude(25.4796508);
-        taskListAdapter.add(t);
-        t = new Task(2, 10);
-        t.setName("Task2");
-        Task t2 = new Task(100, 10);
-        t2.setName("Child1");
-        t.addChild(t2);
-        t2 = new Task(101, 10);
-        t2.setName("Child2");
-        t.addChild(t2);
-        taskListAdapter.add(t);
-        t = new Task(3, 10);
-        t.setName("Task3");
-        taskListAdapter.add(t);
-        t = new Task(4, 10);
-        t.setName("Task4");
-        taskListAdapter.add(t);
     }
 
     private PendingIntent getGeofencePendingIntent() {

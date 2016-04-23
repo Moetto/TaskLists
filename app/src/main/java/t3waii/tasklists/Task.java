@@ -22,6 +22,7 @@ public class Task implements Serializable {
     private int creator;
     private double longitude;
     private double latitude;
+    private boolean completed;
     private static final String TAG = "TaskListsTask";
 
     public Task(long id, int creator) {
@@ -29,6 +30,7 @@ public class Task implements Serializable {
         this.creator = creator;
         this.name = "";
         this.children = new ArrayList<>();
+        this.completed = false;
     }
 
     public Task(JSONObject taskAsJson) throws JSONException {
@@ -106,6 +108,9 @@ public class Task implements Serializable {
         }
     }
 
+    public boolean getCompleted() { return this.completed; }
+    public void complete() { this.completed = true; }
+
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
         this.deadline = newValues.getDeadline();
@@ -148,5 +153,20 @@ public class Task implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Task)) {
+            return false;
+        }
+
+        Task t = (Task) o;
+
+        if(this.getId() == t.getId() && this.getCreator() == t.getCreator()) {
+            return true;
+        }
+
+        return false;
     }
 }

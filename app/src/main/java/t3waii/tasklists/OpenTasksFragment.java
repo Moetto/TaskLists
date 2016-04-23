@@ -2,7 +2,6 @@ package t3waii.tasklists;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by matti on 4/13/16.
  */
 
-public class OpenTasksFragment extends ListFragment {
+public class OpenTasksFragment extends TasksFragment {
     public static final String TAG = "OpenTasksFragment";
-    public static List<Task> openTasks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -33,7 +30,7 @@ public class OpenTasksFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, openTasks) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -58,7 +55,7 @@ public class OpenTasksFragment extends ListFragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = openTasks.get(position);
+                Task task = tasks.get(position);
                 if(task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
@@ -117,6 +114,5 @@ public class OpenTasksFragment extends ListFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
-
     }
 }
