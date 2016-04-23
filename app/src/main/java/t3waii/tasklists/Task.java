@@ -17,12 +17,14 @@ public class Task {
     private User creator;
     private double longitude;
     private double latitude;
+    private boolean completed;
 
     public Task(long id, User creator) {
         this.id = id;
         this.creator = creator;
         this.name = "";
         this.children = new ArrayList<>();
+        this.completed = false;
     }
 
     public String getName() { return this.name; }
@@ -45,6 +47,9 @@ public class Task {
             }
         }
     }
+
+    public boolean getCompleted() { return this.completed; }
+    public void complete() { this.completed = true; }
 
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
