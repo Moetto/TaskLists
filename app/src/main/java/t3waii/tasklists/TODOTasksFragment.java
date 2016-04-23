@@ -1,6 +1,5 @@
 package t3waii.tasklists;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +22,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.Manifest;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

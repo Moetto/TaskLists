@@ -2,8 +2,11 @@ package t3waii.tasklists;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -22,20 +25,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
-public class MainActivity extends AppCompatActivity implements SignInListener, NetworkListener {
+public class MainActivity extends AppCompatActivity implements SignInListener {
 
-    //private final static int TAB_COUNT = 4;
+    private static final int register = 100;
     private static final String TAG = "TasksMainActivity";
-    private static final int READ_PHONE_STATE_PERMISSION_CHECK = 100;
     private static String apiId = "";
     private static String serverAddress;
     private Menu menu;
@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
     ViewPager pager;
     TabLayout tabs;
     String ACCOUNT_MANAGER = "accountmanager";
-    private static final int register = 1000;
-    public static List<User> users = new ArrayList<>();
-    public static List<Location> locations = new ArrayList<>();
+    private static Set<User> users = new HashSet<>();
+    private static Set<User> groupMembers = new HashSet<>();
+    private static Set<Location> locations = new HashSet<>();
     private static List<Fragment> fragments = new ArrayList<>();
     private static User selfGroupMember;
+    BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +63,18 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         fragments.add(new CompletedTasksFragment());
 
         //TODO: remove
-        users.add(new User("Nimi1", (long) 1));
-        users.add(new User("Nimi2", (long) 2));
-        users.add(new User("Nimi3", (long) 3));
-        users.add(new User("Nimi4", (long) 4));
-        users.add(new User("Nimi5", (long) 5));
+        users.add(new User("Nimi1", 1));
+        users.add(new User("Nimi2", 2));
+        users.add(new User("Nimi3", 3));
+        users.add(new User("Nimi4", 4));
+        users.add(new User("Nimi5", 5));
+        /*
         locations.add(new Location((long) 1, "Paikka1", new LatLng(24, 23)));
         locations.add(new Location((long) 2, "Paikka2", new LatLng(34, 33)));
         locations.add(new Location((long) 3, "Paikka3", new LatLng(44, 43)));
         locations.add(new Location((long) 4, "Paikka4", new LatLng(54, 53)));
         locations.add(new Location((long) 5, "Paikka5", new LatLng(64, 63)));
-
+        */
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         GoogleAccountManager googleAccountManager = new GoogleAccountManager();
@@ -100,6 +102,40 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
             }
         });
         serverAddress = getString(R.string.server_url);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (intent.getAction()) {
+                    case NetworkRegister.ACTION_REGISTERED:
+                        Log.d(TAG, "registered");
+                        selfGroupMember = new User("", intent.getIntExtra(NetworkRegister.EXTRA_MEMBER_ID, 0));
+                        apiId = intent.getStringExtra(NetworkRegister.EXTRA_AUTH_TOKEN);
+                        int groupId = intent.getIntExtra(NetworkRegister.EXTRA_GROUP_ID, 0);
+                        if (groupId != 0) {
+                            NetworkGroups.getGroup(context, groupId);
+                            NetworkGroupMembers.getGroupMembers(context);
+                        }
+                        NetworkGroupMembers.getAllUsers(context);
+                        break;
+                    case NetworkGroups.ACTION_GET_GROUP:
+                        Log.d(TAG, "Got group");
+                        setMainMenuGroupItemsVisibility(true);
+                        NetworkTasks.getTasks(context);
+                        break;
+                    case NetworkGroupMembers.ACTION_UPDATE_USERS:
+                        Log.d(TAG, "Got updated list of users");
+                        break;
+                    case NetworkGroupMembers.ACTION_UPDATE_GROUP_MEMBERS:
+                        Log.d(TAG, "Got updated list of group members");
+                        break;
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(NetworkRegister.ACTION_REGISTERED);
+        registerReceiver(broadcastReceiver, intentFilter);
+        intentFilter = new IntentFilter(NetworkGroups.ACTION_GET_GROUP);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Override
@@ -141,7 +177,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         return super.onOptionsItemSelected(item);
     }
 
-    public static User getSelfGroupMember() { return selfGroupMember; }
+    public static User getSelfGroupMember() {
+        return selfGroupMember;
+    }
 
     public static void updateDatasets() {
         for (Fragment f : fragments) {
@@ -171,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         alertDialogBuilder.setView(promptView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        NetworkGroups.leaveGroup(menu);
+                        NetworkGroups.leaveGroup(getApplicationContext());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -193,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         alertDialogBuilder
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        NetworkGroups.postNewGroup(input.getText().toString(), menu);
+                        NetworkGroups.postNewGroup(getApplicationContext(), input.getText().toString());
 
                     }
                 })
@@ -206,21 +244,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         alertD.show();
     }
 
-    @Override
-    public void onNetworkOperationSuccess(int requestCode, String response) {
-        //TODO add support for other activites
-        if (requestCode == register) {
-            try {
-                JSONObject responseAsJson = new JSONObject(response);
-                apiId = responseAsJson.getString("token");
-                selfGroupMember = new User("Me", responseAsJson.getLong("group_member_id"));
-                Log.d(TAG, "" + selfGroupMember.getId());
-                NetworkTasks.getTasks();
-                NetworkLocations.getLocations();
-            } catch (JSONException ex) {
-                Log.e(TAG, "Invalid json from register");
-            }
-        }
+    public static void removeGroupMember(User user) {
+        groupMembers.remove(user);
     }
 
     public static class TabAdapter extends FragmentPagerAdapter {
@@ -262,9 +287,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
         //Toast.makeText(this, accountManager.getGoogleId(), Toast.LENGTH_LONG).show();
         register();
     }
+
     public void register() {
         GoogleAccountManager accountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
-        NetworkRegister.register(this, accountManager.getGoogleToken(), register, this);
+        NetworkRegister.register(this, accountManager.getGoogleToken(), register);
     }
 
     public void onLogOut() {
@@ -277,5 +303,30 @@ public class MainActivity extends AppCompatActivity implements SignInListener, N
 
     public static String getServerAddress() {
         return serverAddress;
+    }
+
+    public static void addLocation(Location location) {
+        locations.add(location);
+        updateDatasets();
+    }
+
+    public static List<Location> getLocations() {
+        return new ArrayList<>(locations);
+    }
+
+    public static void removeLocation(Location location){
+        locations.remove(location);
+    }
+
+    public static void addUser(User user) {
+        users.add(user);
+    }
+
+    public static void removeUser(User user) {
+        users.remove(user);
+    }
+
+    public static List<User> getUsers() {
+        return new ArrayList<>(users);
     }
 }

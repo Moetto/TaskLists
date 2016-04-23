@@ -9,7 +9,7 @@ import com.google.android.gms.gcm.GcmListenerService;
  * Created by moetto on 21/04/16.
  */
 public class GcmListener extends GcmListenerService {
-    private static final String TAG = "TaskGcmListener";
+    public static final String TAG = "TaskGcmListener";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {

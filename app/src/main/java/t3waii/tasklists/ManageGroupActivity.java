@@ -24,7 +24,7 @@ public class ManageGroupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_manage);
 
-        List<User> userList = new ArrayList<>(MainActivity.users);
+        List<User> userList = new ArrayList<>(MainActivity.getUsers());
         //TODO: add other users to list
 
         ArrayAdapter<User> groupMembersAdapter = new ArrayAdapter<User>(this, R.layout.group_manage_single_user, userList) {
@@ -43,14 +43,12 @@ public class ManageGroupActivity extends Activity {
 
                 CheckBox selected = (CheckBox) view.findViewById(R.id.user_checkbox);
 
-                if(MainActivity.users.contains(user)) {
+                if(MainActivity.getUsers().contains(user)) {
                     selected.setChecked(true);
                 }
-
                 return view;
             }
         };
-
         ListView listElement = (ListView)findViewById(R.id.users_list);
         listElement.setAdapter(groupMembersAdapter);
     }

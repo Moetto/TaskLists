@@ -1,8 +1,11 @@
 package t3waii.tasklists;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -32,12 +35,13 @@ public class ManageGroupLocations extends Activity {
     private int PLACE_PICKER_REQUEST = 1;
     public static ArrayAdapter<Location> locationListAdapter;
     private static final String TAG = "ManageGroupLocations";
+    private BroadcastReceiver locationReceiver;
+    IntentFilter intentFilter = new IntentFilter(NetworkLocations.ACTION_NEW_LOCATION);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_group_locations);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +58,7 @@ public class ManageGroupLocations extends Activity {
         });
 
         if(locationListAdapter == null) {
-            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, MainActivity.locations) {
+            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, MainActivity.getLocations()) {
                 View.OnClickListener handleClick = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -102,6 +106,13 @@ public class ManageGroupLocations extends Activity {
         if(locationListAdapter.getCount() == 0) {
             fab.performClick();
         }
+
+        locationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Received new locations");
+            }
+        };
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -131,7 +142,7 @@ public class ManageGroupLocations extends Activity {
                         values.put("name", input.getText().toString());
                         values.put("latitude", Double.toString(location.latitude));
                         values.put("longitude", Double.toString(location.longitude));
-                        NetworkLocations.postNewLocation(values);
+                        NetworkLocations.postNewLocation(values, ManageGroupLocations.this);
                         //locationListAdapter.add(new Location(Long.valueOf(0), input.getText().toString(), location));
                     }
                 })
@@ -143,5 +154,17 @@ public class ManageGroupLocations extends Activity {
         // create an alert dialog
         AlertDialog alertD = alertDialogBuilder.create();
         alertD.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(locationReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(locationReceiver, intentFilter);
     }
 }

@@ -1,5 +1,8 @@
 package t3waii.tasklists;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -21,9 +24,12 @@ import cz.msebera.android.httpclient.Header;
  * Created by matti on 4/21/16.
  */
 public class NetworkLocations  {
-    private final static String TAG = "NetworkLocations";
+    private final static String TAG = "TaskNetworkLocations";
+    static final String ACTION_NEW_LOCATION = "t3waii.tasklists.action_new_location",
+    ACTION_LOCATION_REMOVED = "removedLocation",
+    EXTRA_LOCATION = "location";
 
-    public static void postNewLocation(Map<String, String> values) {
+    public static void postNewLocation(Map<String, String> values, final Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         RequestParams params = new RequestParams();
@@ -44,8 +50,12 @@ public class NetworkLocations  {
                 }
                 Location l = parseLocation(jsonLocation);
                 if(l != null) {
-                    MainActivity.locations.add(l);
-                    updateDatasets();
+                    Intent intent = new Intent();
+                    intent.setAction(ACTION_NEW_LOCATION);
+                    intent.putExtra("test", new Task(1, 1));
+                    context.sendBroadcast(intent);
+                    //MainActivity.locations.add(l);
+                    //updateDatasets();
                     //TODO: notify other group members of new location
                 }
             }
@@ -60,7 +70,7 @@ public class NetworkLocations  {
         });
     }
 
-    public static void getLocations() {
+    public static void getLocations(Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         asyncHttpClient.get(MainActivity.getServerAddress() + "locations/", new AsyncHttpResponseHandler() {
@@ -99,7 +109,7 @@ public class NetworkLocations  {
                 }
 
                 // remove locations that do not exist anymore
-                for (Location mainLocation : MainActivity.locations) {
+                for (Location mainLocation : MainActivity.getLocations()) {
                     boolean stillExists = false;
                     for (Location l : locationList) {
                         if (mainLocation.getId() == l.getId()) {
@@ -108,25 +118,23 @@ public class NetworkLocations  {
                         }
                     }
                     if (!stillExists) {
-                        MainActivity.locations.remove(mainLocation);
+                        MainActivity.removeLocation(mainLocation);
                     }
                 }
 
                 // add locations that are not already in the list
                 for (Location l : locationList) {
                     boolean alreadyExists = false;
-                    for (Location mainLocation : MainActivity.locations) {
+                    for (Location mainLocation : MainActivity.getLocations()) {
                         if (mainLocation.getId() == l.getId()) {
                             alreadyExists = true;
                             break;
                         }
                     }
                     if (!alreadyExists) {
-                        MainActivity.locations.add(l);
+                        MainActivity.addLocation(l);
                     }
                 }
-
-                updateDatasets();
             }
 
             @Override
@@ -146,8 +154,10 @@ public class NetworkLocations  {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete location succeeded");
-                MainActivity.locations.remove(location);
-                updateDatasets();
+                Intent intent = new Intent();
+                intent.setAction(ACTION_LOCATION_REMOVED);
+                intent.putExtra(EXTRA_LOCATION, location);
+                MainActivity.removeLocation(location);
             }
 
             @Override
@@ -158,12 +168,6 @@ public class NetworkLocations  {
                 }
             }
         });
-    }
-
-    private static void updateDatasets() {
-        if (ManageGroupLocations.locationListAdapter != null) {
-            ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
-        }
     }
 
     // Parse Location information from json and return it as Location object

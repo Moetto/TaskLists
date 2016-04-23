@@ -1,22 +1,28 @@
 package t3waii.tasklists;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.List;
 
 /**
  * Created by matti on 4/7/16.
  */
-public class Task {
-    private String name;
-    private Date due, estimatedCompletion;
+public class Task implements Serializable {
+    private String name, description;
+    private Date deadline, estimatedCompletion;
     private List<Task> children;
-    private User assignedTo;
+    private int responsibleMember;
     private long id;
     private int creator;
     private double longitude;
     private double latitude;
+    private static final String TAG = "TaskListsTask";
 
     public Task(long id, int creator) {
         this.id = id;
@@ -25,21 +31,75 @@ public class Task {
         this.children = new ArrayList<>();
     }
 
-    public String getName() { return this.name; }
-    public void setName(String newName) { this.name = newName; }
+    public Task(JSONObject taskAsJson) throws JSONException {
 
-    public Date getDue() { return this.due; }
-    public void setDue(Date newDue) { this.due = newDue; }
+        try {
+            id = taskAsJson.getLong("id");
+            creator = taskAsJson.getInt("creator");
+        } catch (JSONException e) {
+            Log.d(TAG, "unable to parse task id or creator!");
+            throw e;
+        }
 
-    public Date getEstimatedCompletion() { return this.estimatedCompletion; }
-    public void setEstimatedCompletion(Date newEstimatedCompletion) { this.estimatedCompletion = newEstimatedCompletion; }
+        try {
+            name = taskAsJson.getString("title");
+        } catch (JSONException e) {
+        }
+        try {
+            description = taskAsJson.getString("description");
+        } catch (JSONException e) {
+        }
+        try {
+            responsibleMember = taskAsJson.getInt("responsible_member");
+        } catch (JSONException e) {
+        }
+        try {
+            int deadlineEpoch = taskAsJson.getInt("deadline");
+            deadline = new Date(deadlineEpoch);
+        } catch (JSONException e) {
+        }
+        try {
+            int estimatedCompletionEpoch = taskAsJson.getInt("estimated_completion_time");
+            estimatedCompletion = new Date(estimatedCompletionEpoch);
+        } catch (JSONException e) {
+        }
+    }
 
-    public List<Task> getChildren() { return this.children; }
-    public void addChild(Task childTask) { this.children.add(childTask); }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public Date getDeadline() {
+        return this.deadline;
+    }
+
+    public void setDeadline(Date newDue) {
+        this.deadline = newDue;
+    }
+
+    public Date getEstimatedCompletion() {
+        return this.estimatedCompletion;
+    }
+
+    public void setEstimatedCompletion(Date newEstimatedCompletion) {
+        this.estimatedCompletion = newEstimatedCompletion;
+    }
+
+    public List<Task> getChildren() {
+        return this.children;
+    }
+
+    public void addChild(Task childTask) {
+        this.children.add(childTask);
+    }
 
     public void removeChild(Task childTask) {
-        for(int i = 0; i < this.children.size(); i++) {
-            if(this.children.get(i).getId() == childTask.getId()) {
+        for (int i = 0; i < this.children.size(); i++) {
+            if (this.children.get(i).getId() == childTask.getId()) {
                 this.children.remove(i);
                 return;
             }
@@ -48,19 +108,31 @@ public class Task {
 
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
-        this.due = newValues.getDue();
+        this.deadline = newValues.getDeadline();
         this.children = newValues.getChildren();
-        this.assignedTo = newValues.getAssignedTo();
+        this.responsibleMember = newValues.getResponsibleMemberId();
     }
 
-    public User getAssignedTo() { return this.assignedTo; }
-    public void setAssignedTo(User newAssignedTo) { this.assignedTo = newAssignedTo; }
+    public int getResponsibleMemberId() {
+        return this.responsibleMember;
+    }
 
-    public int getCreator() { return this.creator; }
-    public long getId() { return this.id; }
+    public void setAssignedTo(User newAssignedTo) {
+        this.responsibleMember = newAssignedTo.getId();
+    }
+
+    public int getCreator() {
+        return this.creator;
+    }
+
+    public long getId() {
+        return this.id;
+    }
 
     @Override
-    public String toString() { return this.name; }
+    public String toString() {
+        return this.name;
+    }
 
     public double getLatitude() {
         return latitude;
