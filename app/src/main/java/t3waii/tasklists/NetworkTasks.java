@@ -11,7 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -45,6 +47,7 @@ public class NetworkTasks {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Post new task succeeded");
                 Log.d(TAG, new String(responseBody));
+                // TODO: add to created and todo if assigned to self
             }
 
             @Override
@@ -76,6 +79,12 @@ public class NetworkTasks {
                     return;
                 }
 
+                Long ownId = MainActivity.getSelfGroupMember().getId();
+                List<Task> todo = new ArrayList<>();
+                List<Task> created = new ArrayList<>();
+                List<Task> open = new ArrayList<>();
+                List<Task> completed = new ArrayList<>();
+
                 for (int i = 0; i < tasks.length(); i++) {
                     JSONObject jsonTask;
                     try {
@@ -91,22 +100,25 @@ public class NetworkTasks {
                         continue;
                     }
 
-                    boolean taskUpdated = false;
-
-                    for(int j = 0; j < OpenTasksFragment.openTasks.size(); j++) {
-                        Task t = OpenTasksFragment.openTasks.get(j);
-                        if(t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
-                            t.updateTask(task);
-                            taskUpdated = true;
-                            Log.d(TAG, "task updated!");
-                            break;
+                    if(task.getCompleted()) {
+                        completed.add(task);
+                    } else if(task.getAssignedTo() != null && task.getAssignedTo().getId() == ownId) {
+                        todo.add(task);
+                        if(task.getCreator().getId() == ownId) {
+                            created.add(task);
                         }
-                    }
-
-                    if(!taskUpdated) {
-                        OpenTasksFragment.openTasks.add(task);
+                    } else if(task.getCreator().getId() == ownId) {
+                        created.add(task);
+                    } else {
+                        open.add(task);
                     }
                 }
+
+                //TODOTasksFragment.updateTasks(todo);
+                //CreatedTasksFragment.updateTasks(created);
+                //OpenTasksFragment.updateTasks(open);
+                //CompletedTasksFragment.updateTasks(completed);
+
                 MainActivity.updateDatasets();
             }
 
@@ -122,18 +134,34 @@ public class NetworkTasks {
 
     private static Task parseTask(JSONObject jsonTask) {
         Long id;
+        boolean completed = false;
         Long responsibleMember = null;
         String title = "";
         String description = "";
-        int creator;
+        Long creatorId;
         Date deadline = null;
         Date estimatedCompletion = null;
 
+        User creator = null;
         try {
             id = jsonTask.getLong("id");
-            creator = jsonTask.getInt("creator");
+            creatorId = jsonTask.getLong("creator");
+            if(creatorId == MainActivity.getSelfGroupMember().getId()) {
+                creator = MainActivity.getSelfGroupMember();
+            }
+            for(User u : MainActivity.users) {
+                if(u.getId() == creatorId) {
+                    creator = u;
+                    break;
+                }
+            }
         } catch (JSONException e) {
-            Log.d(TAG, "unable to parse task id or creator!");
+            Log.d(TAG, "unable to parse task id or creator id!");
+            return null;
+        }
+
+        if(creator == null) {
+            Log.d(TAG, "Creator not found!");
             return null;
         }
 
@@ -142,19 +170,25 @@ public class NetworkTasks {
         try { responsibleMember = jsonTask.getLong("responsible_member"); } catch (JSONException e) { }
         try { int deadlineEpoch = jsonTask.getInt("deadline"); deadline = new Date(deadlineEpoch); } catch (JSONException e) { }
         try { int estimatedCompletionEpoch = jsonTask.getInt("estimated_completion_time"); estimatedCompletion = new Date(estimatedCompletionEpoch); } catch (JSONException e) { }
+        try { completed = jsonTask.getBoolean("completed"); } catch (JSONException e) { }
 
         Task t = new Task(id, creator);
         t.setName(title);
 
         if (responsibleMember != null) {
-            for (User u : MainActivity.users) {
-                if (u.getId() == responsibleMember) {
-                    t.setAssignedTo(u);
-                    break;
+            if(responsibleMember == MainActivity.getSelfGroupMember().getId()) {
+                t.setAssignedTo(MainActivity.getSelfGroupMember());
+            } else {
+                for (User u : MainActivity.users) {
+                    if (u.getId() == responsibleMember) {
+                        t.setAssignedTo(u);
+                        break;
+                    }
                 }
             }
         }
 
+        if (completed) { t.complete(); }
         if (deadline != null) { t.setDue(deadline); }
         if (estimatedCompletion != null) { t.setEstimatedCompletion(estimatedCompletion); }
 
