@@ -22,17 +22,6 @@ import cz.msebera.android.httpclient.Header;
 public class NetworkTasks {
     private final static String TAG = "NetworkTasks";
 
-    private void register() {
-        new AsyncTask<Void, Void, Void>(){
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                return null;
-            }
-        }.execute();
-
-    }
-
     public static void postNewTask(Map<String, String> values) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
@@ -159,9 +148,5 @@ public class NetworkTasks {
         if (estimatedCompletion != null) { t.setEstimatedCompletion(estimatedCompletion); }
 
         return t;
-    }
-
-    public void update() {
-        register();
     }
 }
