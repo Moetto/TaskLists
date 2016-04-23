@@ -89,24 +89,5 @@ public class CompletedTasksFragment extends TasksFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
-
-        Task t = new Task(1, 10);
-        t.setName("Task1");
-        taskListAdapter.add(t);
-        t = new Task(2, 10);
-        t.setName("Task2");
-        Task t2 = new Task(100, 10);
-        t2.setName("Child1");
-        t.addChild(t2);;
-        t2 = new Task(101, 10);
-        t2.setName("Child2");
-        t.addChild(t2);
-        taskListAdapter.add(t);
-        t = new Task(3, 10);
-        t.setName("Task3");
-        taskListAdapter.add(t);
-        t = new Task(4, 10);
-        t.setName("Task4");
-        taskListAdapter.add(t);
     }
 }
