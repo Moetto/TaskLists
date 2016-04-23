@@ -39,10 +39,9 @@ import java.util.Set;
 /**
  * Created by moetto on 3/11/16.
  */
-public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuItemClickListener {
+public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenuItemClickListener {
     public static final String TAG = "TODOTasksFragment";
     private static final int LOCATION_PERMISSION_REQUEST = 11;
-    public static ArrayAdapter<Task> taskListAdapter;
     private GoogleApiClient googleApiClient;
     private PendingIntent geofencePendingIntent;
     private Set<Task> tasksPendingGeofence = new HashSet<>();
@@ -61,7 +60,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
                 .build();
         googleApiClient.connect();
 
-        taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,7 +98,7 @@ public class TODOTasksFragment extends ListFragment implements PopupMenu.OnMenuI
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = taskListAdapter.getItem(position);
+                Task task = tasks.get(position);
                 if (task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);

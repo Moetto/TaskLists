@@ -20,9 +20,8 @@ import java.util.List;
  * Created by matti on 4/14/16.
  */
 
-public class CompletedTasksFragment extends ListFragment {
+public class CompletedTasksFragment extends TasksFragment {
     public static final String TAG = "CompletedTasksFragment";
-    public static ArrayAdapter<Task> taskListAdapter;
 
     @Nullable
     @Override
@@ -33,12 +32,12 @@ public class CompletedTasksFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                Task task = taskListAdapter.getItem(position);
+                Task task = tasks.get(position);
                 if(task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
