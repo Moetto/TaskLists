@@ -82,4 +82,19 @@ public class Task {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Task)) {
+            return false;
+        }
+
+        Task t = (Task) o;
+
+        if(this.getId() == t.getId() && this.getCreator() == t.getCreator()) {
+            return true;
+        }
+
+        return false;
+    }
 }
