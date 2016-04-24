@@ -45,8 +45,15 @@
         <activity android:name=".ManageGroupLocations"/>
         <service android:name=".GeofenceIntentService"
             android:exported="true"/>
-        <application/>
 
+        <receiver android:name=".Invite"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="t3waii.tasklists.action_accept_invite" />
+                <action android:name="t3waii.tasklists.action_cancel_invite" />
+            </intent-filter>
+        </receiver>
+        <application/>
 
         <meta-data
             android:name="com.google.android.gms.version"
