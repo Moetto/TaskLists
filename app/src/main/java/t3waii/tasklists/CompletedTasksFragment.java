@@ -28,7 +28,7 @@ public class CompletedTasksFragment extends TasksFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         TAG = "CompletedTasksFragment";
-        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
