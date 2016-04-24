@@ -204,6 +204,15 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         }
     }
 
+    public static CreatedTasksFragment getCreatedTasksFragment() {
+        for(Fragment f : fragments) {
+            if(f instanceof CreatedTasksFragment) {
+                return (CreatedTasksFragment) f;
+            }
+        }
+        return null;
+    }
+
     // When user is in group, hide new group menu item and show manage group and leave group.
     private void setMainMenuGroupItemsVisibility(boolean isInGroup) {
         this.menu.findItem(R.id.dialog_newgroup_settings).setVisible(!isInGroup);

@@ -131,6 +131,16 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
         setListAdapter(taskListAdapter);
     }
 
+    public List<Task> getUnclaimedTasks() {
+        List<Task> unclaimedTasks = new ArrayList<>();
+        for(Task t : tasks) {
+            if(t.getResponsibleMemberId() == 0) {
+                unclaimedTasks.add(t);
+            }
+        }
+        return unclaimedTasks;
+    }
+
     @Override
     protected boolean affectThisFragment(Task task) {
         return task.getCreator() == MainActivity.getSelfGroupMemberId() && !task.getCompleted();

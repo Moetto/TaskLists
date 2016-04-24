@@ -21,12 +21,12 @@ import java.util.List;
  */
 public abstract class TasksFragment extends ListFragment {
     protected String TAG = "TasksFragment";
-    protected static List<Task> tasks = new ArrayList<>();
+    protected List<Task> tasks = new ArrayList<>();
     protected BroadcastReceiver broadcastReceiver;
     protected List<IntentFilter> intentFilters = new ArrayList<>();
 
     // Add or update given task and update dataset
-    public static void addTask(Task task) {
+    public void addTask(Task task) {
         for (Task t : tasks) {
             if (t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
                 t.updateTask(task);
@@ -39,7 +39,7 @@ public abstract class TasksFragment extends ListFragment {
     }
 
     // Remove given task from list and update dataset
-    public static void removeTask(Task task) {
+    public void removeTask(Task task) {
         for (Task t : tasks) {
             if (t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
                 tasks.remove(t);
@@ -50,7 +50,7 @@ public abstract class TasksFragment extends ListFragment {
     }
 
     // Update tasks to match the given list
-    public static void updateTasks(List<Task> updatedTasks) {
+    public void updateTasks(List<Task> updatedTasks) {
         // Remove tasks that do not exist in updated list
         for (Task existingTask : tasks) {
             if (!updatedTasks.contains(existingTask)) {

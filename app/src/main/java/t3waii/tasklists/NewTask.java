@@ -128,8 +128,9 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         noParent.setName("No parent");
         createdTasks.add(noParent);
 
-        for(int i = 0; i < CreatedTasksFragment.tasks.size(); i++) {
-            createdTasks.add(CreatedTasksFragment.tasks.get(i));
+        CreatedTasksFragment f = MainActivity.getCreatedTasksFragment();
+        if(f != null) {
+            createdTasks.addAll(f.getUnclaimedTasks());
         }
 
         newTaskParentTask = (Spinner) findViewById(R.id.newTaskParentTask);
