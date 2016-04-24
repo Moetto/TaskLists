@@ -9,6 +9,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -42,6 +43,30 @@ public class NetworkTasks {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.d(TAG, "Post new task failed");
+                if (responseBody != null) {
+                    Log.d(TAG, new String(responseBody));
+                }
+            }
+        });
+    }
+
+    public static void deleteTask(final Context context, final int taskId) {
+        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
+        asyncHttpClient.delete(MainActivity.getServerAddress() + "tasks/" + Integer.toString(taskId) + "/", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d(TAG, "Delete task succeeded");
+                Intent intent = new Intent();
+                intent.setAction(Task.ACTION_REMOVE_TASK_BY_ID);
+                intent.putExtra(Task.EXTRA_TASK_ID, taskId);
+                context.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG, "Delete task failed");
+                Log.d(TAG, "Status:" + statusCode);
                 if (responseBody != null) {
                     Log.d(TAG, new String(responseBody));
                 }

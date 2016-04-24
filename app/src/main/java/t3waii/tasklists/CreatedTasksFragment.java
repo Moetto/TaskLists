@@ -157,6 +157,7 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
                 return true;
             case R.id.remove_task:
                 Log.d(TAG, "remove clicked");
+                NetworkTasks.deleteTask(getContext(), taskId);
                 return true;
             default:
                 Log.d(TAG, "dunno what was clicked");

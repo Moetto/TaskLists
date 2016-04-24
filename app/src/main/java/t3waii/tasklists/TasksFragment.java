@@ -49,6 +49,17 @@ public abstract class TasksFragment extends ListFragment {
         }
     }
 
+    // Remove task with given id from list and update dataset
+    public void removeTask(int id) {
+        for(Task t : tasks) {
+            if(t.getId() == id) {
+                tasks.remove(t);
+                MainActivity.updateDatasets();
+                return;
+            }
+        }
+    }
+
     // Update tasks to match the given list
     public void updateTasks(List<Task> updatedTasks) {
         // Remove tasks that do not exist in updated list
@@ -116,18 +127,21 @@ public abstract class TasksFragment extends ListFragment {
                         try {
                             JSONObject taskJson = new JSONObject(intent.getStringExtra(Task.EXTRA_TASK_AS_JSON_STRING));
                             Task task = new Task(taskJson);
-                            if (affectThisFragment(task)) {
-                                removeTask(task);
-                            }
+                            removeTask(task);
                         } catch (JSONException ex) {
                             Log.d(TAG, Log.getStackTraceString(ex));
                         }
+                        break;
+
+                    case Task.ACTION_REMOVE_TASK_BY_ID:
+                        int taskId = intent.getIntExtra(Task.EXTRA_TASK_ID, 0);
+                        removeTask(taskId);
                         break;
                 }
             }
         };
 
-        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK}) {
+        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK, Task.ACTION_REMOVE_TASK_BY_ID}) {
             intentFilters.add(new IntentFilter(action));
         }
 
