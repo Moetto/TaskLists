@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fragments.clear();
         fragments.add(new TODOTasksFragment());
         fragments.add(new CreatedTasksFragment());
         fragments.add(new OpenTasksFragment());

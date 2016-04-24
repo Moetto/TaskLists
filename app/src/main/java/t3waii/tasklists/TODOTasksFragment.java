@@ -207,6 +207,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .setLoiteringDelay(1000)
                         .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setRequestId("" + task.getId() + ";" + task.getName())
                         .build();
 
                 GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
@@ -238,7 +239,11 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
     }
 
     public void removeGeoFence(Task task) {
-
+        if (task.getLatitude() != 0 && task.getLongitude() != 0) {
+            ArrayList<String> removed = new ArrayList<>();
+            removed.add("" + task.getId() + ";" + task.getName());
+            LocationServices.GeofencingApi.removeGeofences(googleApiClient, removed);
+        }
     }
 
     @Override
@@ -257,5 +262,17 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                 Log.d(TAG, "dunno what was clicked");
                 return false;
         }
+    }
+
+    @Override
+    public void addTask(Task task) {
+        addGeoFence(task);
+        super.addTask(task);
+    }
+
+    @Override
+    public void removeTask(Task task) {
+        removeGeoFence(task);
+        super.removeTask(task);
     }
 }
