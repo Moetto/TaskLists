@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     private static Set<User> groupMembers = new HashSet<>();
     private static Set<Location> locations = new HashSet<>();
     private static List<Fragment> fragments = new ArrayList<>();
-    private static User selfGroupMember;
+    private static int selfGroupMemberId;
     BroadcastReceiver broadcastReceiver;
 
     @Override
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 switch (intent.getAction()) {
                     case NetworkRegister.ACTION_REGISTERED:
                         Log.d(TAG, "registered");
-                        selfGroupMember = new User("", intent.getIntExtra(NetworkRegister.EXTRA_MEMBER_ID, 0));
+                        selfGroupMemberId = intent.getIntExtra(NetworkRegister.EXTRA_MEMBER_ID, 0);
                         apiId = intent.getStringExtra(NetworkRegister.EXTRA_AUTH_TOKEN);
                         int groupId = intent.getIntExtra(NetworkRegister.EXTRA_GROUP_ID, 0);
                         if (groupId != 0) {
@@ -187,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return super.onOptionsItemSelected(item);
     }
 
-    public static User getSelfGroupMember() {
-        return selfGroupMember;
+    public static int getSelfGroupMemberId() {
+        return selfGroupMemberId;
     }
 
     public static void updateDatasets() {

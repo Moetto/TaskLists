@@ -147,7 +147,7 @@ public class OpenTasksFragment extends TasksFragment {
             }
         };
 
-        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_POST_TASK, Task.ACTION_REMOVE_TASK}) {
+        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK}) {
             intentFilters.add(new IntentFilter(action));
         }
     }
