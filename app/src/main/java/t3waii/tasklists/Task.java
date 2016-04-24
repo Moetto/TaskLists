@@ -25,9 +25,9 @@ public class Task implements Serializable {
     private boolean completed;
     private static final String TAG = "TaskListsTask";
     public static final String
-    ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_task",
-    ACTION_GET_TASK = "t3waii.tasklists.action_update_task",
-    ACTION_POST_TASK = "t3waii.tasklists.action_update_task",
+    ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_tasks",
+    ACTION_GET_TASK = "t3waii.tasklists.action_get_task",
+    ACTION_POST_TASK = "t3waii.tasklists.action_post_task",
     ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
     EXTRA_TASK_AS_JSON_STRING = "extraTask",
     EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks";
