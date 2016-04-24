@@ -131,20 +131,14 @@ public abstract class TasksFragment extends ListFragment {
             intentFilters.add(new IntentFilter(action));
         }
 
+        for (IntentFilter intentFilter : intentFilters) {
+            getActivity().registerReceiver(broadcastReceiver, intentFilter);
+        }
+
     }
 
     protected boolean affectThisFragment(Task task) {
         return false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (intentFilters != null && broadcastReceiver != null) {
-            for (IntentFilter intentFilter : intentFilters) {
-                getActivity().registerReceiver(broadcastReceiver, intentFilter);
-            }
-        }
     }
 
     @Override
