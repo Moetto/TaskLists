@@ -239,8 +239,8 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Long taskId = item.getIntent().getLongExtra("taskId", 0);
-        Log.d(TAG, "taskId:" + Long.toString(taskId)); //getActionView().toString()
+        int taskId = item.getIntent().getIntExtra("taskId", 0);
+        Log.d(TAG, "taskId:" + Integer.toString(taskId)); //getActionView().toString()
 
         switch (item.getItemId()) {
             case R.id.cancel_task:

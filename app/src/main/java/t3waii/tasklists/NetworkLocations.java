@@ -150,7 +150,7 @@ public class NetworkLocations  {
     public static void deleteLocation(final Location location) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
-        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Long.toString(location.getId()), new AsyncHttpResponseHandler() {
+        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Integer.toString(location.getId()), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete location succeeded");
@@ -172,12 +172,12 @@ public class NetworkLocations  {
 
     // Parse Location information from json and return it as Location object
     private static Location parseLocation(JSONObject jsonLocation) {
-        Long id;
+        int id;
         String name;
         double latitude, longitude;
 
         try {
-            id = jsonLocation.getLong("id");
+            id = jsonLocation.getInt("id");
             name = jsonLocation.getString("name");
             latitude = jsonLocation.getDouble("latitude");
             longitude = jsonLocation.getDouble("longitude");

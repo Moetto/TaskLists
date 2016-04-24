@@ -143,7 +143,7 @@ public class ManageGroupLocations extends Activity {
                         values.put("latitude", Double.toString(location.latitude));
                         values.put("longitude", Double.toString(location.longitude));
                         NetworkLocations.postNewLocation(values, ManageGroupLocations.this);
-                        //locationListAdapter.add(new Location(Long.valueOf(0), input.getText().toString(), location));
+                        //locationListAdapter.add(new Location(0, input.getText().toString(), location));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
