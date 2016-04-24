@@ -20,7 +20,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by matti on 4/21/16.
  */
 public class NetworkGroupMembers extends NetworkHandler{
-    public final static String TAG = "NetworkGroupMembers",
+    public final static String TAG = "TasksNetworkGroupMem",
             ACTION_UPDATE_USERS = "t3waii.tasklists.action_update_users",
             ACTION_UPDATE_GROUP_MEMBERS = "t3waii.tasklists.action_update_group_members",
             EXTRA_USER_JSON_OBJECT_STRING = "extraUser",
@@ -87,6 +87,33 @@ public class NetworkGroupMembers extends NetworkHandler{
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
+            }
+        });
+    }
+
+    public static void joinGroup(final Context context, final int groupId) {
+        Log.d(TAG, "Trying to join group");
+        String groupIdAsString;
+        if (groupId == 0){
+            groupIdAsString = "";
+        } else {
+            groupIdAsString = ""+groupId;
+        }
+        RequestParams params = new RequestParams("group", groupIdAsString);
+        getAsyncHttpClient().patch(getUrl() + MainActivity.getSelfGroupMember() +"/", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d(TAG, "Joined group");
+                Intent joinIntent = new Intent();
+                joinIntent.setAction(Group.ACTION_GET_GROUP);
+                joinIntent.putExtra(Group.EXTRA_GROUP_ID, groupId);
+                context.sendBroadcast(joinIntent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG, "Joining group failed");
+                Log.d(TAG, new String (responseBody));
             }
         });
     }
