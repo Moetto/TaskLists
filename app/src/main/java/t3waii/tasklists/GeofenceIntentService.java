@@ -1,6 +1,9 @@
 package t3waii.tasklists;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
 
@@ -12,7 +15,8 @@ import java.util.List;
 /**
  * Created by moetto on 22/04/16.
  */
-public class GeofenceIntentService extends IntentService{
+public class GeofenceIntentService extends IntentService {
+
     private static final String TAG = "TaskGeofenceService";
 
     /**
@@ -33,7 +37,7 @@ public class GeofenceIntentService extends IntentService{
         Log.d(TAG, "Received intent, hopefully location");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
-            Log.d(TAG, "Is error "+geofencingEvent.getErrorCode());
+            Log.d(TAG, "Is error " + geofencingEvent.getErrorCode());
             return;
         }
 
@@ -41,14 +45,28 @@ public class GeofenceIntentService extends IntentService{
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL ) {
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
-            List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-            Log.d(TAG, triggeringGeofences.get(0).toString());
+            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            for (Geofence geofence : triggeringGeofences) {
+                Log.d(TAG, geofence.toString());
+                Intent notificationIntent = new Intent(this, TODOTasksFragment.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(geofence.getRequestId()), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                String[] taskDetails = geofence.getRequestId().split(";", 1);
+                int taskId = Integer.parseInt(taskDetails[0]);
+                String taskName = taskDetails[1];
+                Notification notification = new Notification.Builder(this)
+                        .setAutoCancel(true)
+                        .setContentText("You are near " + taskName + " location")
+                        .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                        .setContentIntent(pendingIntent)
+                        .build();
 
-            // Send notification and log the transition details.
+                notificationManager.notify(taskId, notification);
+            }
         }
     }
 }
