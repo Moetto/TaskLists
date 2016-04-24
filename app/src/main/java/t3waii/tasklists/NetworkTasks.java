@@ -18,13 +18,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by moetto on 3/29/16.
  */
 public class NetworkTasks {
-    private final static String TAG = "NetworkTasks",
-    ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_task",
-    ACTION_GET_TASK = "t3waii.tasklists.action_update_task",
-    ACTION_POST_TASK = "t3waii.tasklists.action_update_task",
-    ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
-    EXTRA_TASK_AS_JSON_STRING = "extraTask",
-    EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks";
+    public final static String TAG = "NetworkTasks";
 
     public static void postNewTask(final Context context, Map<String, String> values) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
@@ -40,8 +34,8 @@ public class NetworkTasks {
                 String response = new String(responseBody);
                 Log.d(TAG, response);
                 Intent intent = new Intent();
-                intent.setAction(ACTION_POST_TASK);
-                intent.putExtra(EXTRA_TASK_AS_JSON_STRING, response);
+                intent.setAction(Task.ACTION_POST_TASK);
+                intent.putExtra(Task.EXTRA_TASK_AS_JSON_STRING, response);
                 context.sendBroadcast(intent);
             }
 
@@ -67,8 +61,8 @@ public class NetworkTasks {
 
                 //JSONArray tasks;
                 Intent intent = new Intent();
-                intent.setAction(ACTION_UPDATE_TASKS);
-                intent.putExtra(EXTRA_TASKS_AS_JSON_ARRAY, response);
+                intent.setAction(Task.ACTION_UPDATE_TASKS);
+                intent.putExtra(Task.EXTRA_TASKS_AS_JSON_ARRAY, response);
                 context.sendBroadcast(intent);
                 /*
                     for(int j = 0; j < OpenTasksFragment.openTasks.size(); j++) {

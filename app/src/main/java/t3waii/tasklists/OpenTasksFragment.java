@@ -1,5 +1,9 @@
 package t3waii.tasklists;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +64,7 @@ public class OpenTasksFragment extends TasksFragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 Task task = tasks.get(position);
-                if(task.getChildren().isEmpty()) {
+                if (task.getChildren().isEmpty()) {
                     convertView = createComplexTask(inflater, task);
                     TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
                     textView.setText(task.getName());
@@ -71,11 +79,11 @@ public class OpenTasksFragment extends TasksFragment {
 
                 LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
                 List<Task> children = task.getChildren();
-                for(int i = 0; i < children.size(); i++) {
-                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size()-1) ? true : false), children.get(i));
+                for (int i = 0; i < children.size(); i++) {
+                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size() - 1) ? true : false), children.get(i));
                     TextView textView = (TextView) childView.findViewById(R.id.complex_text);
                     textView.setText(children.get(i).getName());
-                    linearLayout.addView(childView, (i+1));
+                    linearLayout.addView(childView, (i + 1));
                 }
                 return convertView;
             }
@@ -90,8 +98,8 @@ public class OpenTasksFragment extends TasksFragment {
             private View createChildView(LayoutInflater inflater, boolean lastChild, Task childTask) {
                 View view = inflater.inflate(R.layout.child_complex_task, null);
                 hideUnnecessaryButtons(view);
-                if (lastChild){
-                    ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
+                if (lastChild) {
+                    ImageView imageView = (ImageView) view.findViewById(R.id.arrow);
                     imageView.setImageResource(R.drawable.tree_end);
                 }
                 addListenerAndTag(view, childTask);
@@ -114,5 +122,33 @@ public class OpenTasksFragment extends TasksFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Received broadcast");
+                switch (intent.getAction()) {
+                    case Task.ACTION_UPDATE_TASKS:
+                        try {
+                            JSONArray tasksArray = new JSONArray(intent.getStringExtra(Task.EXTRA_TASKS_AS_JSON_ARRAY));
+                            List<Task> updatedTasks = new ArrayList<>();
+                            for (int i = 0; i < tasksArray.length(); i++) {
+                                Task task = new Task(tasksArray.getJSONObject(i));
+                                if (task.getResponsibleMemberId() == 0) {
+                                    updatedTasks.add(task);
+                                }
+                            }
+                            updateTasks(updatedTasks);
+                        } catch (JSONException ex) {
+                            Log.d(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+                }
+            }
+        };
+
+        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_POST_TASK, Task.ACTION_REMOVE_TASK}) {
+            intentFilters.add(new IntentFilter(action));
+        }
     }
 }

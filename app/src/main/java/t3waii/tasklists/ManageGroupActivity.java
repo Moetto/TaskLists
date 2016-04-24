@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +55,8 @@ public class ManageGroupActivity extends Activity {
     }
 
     public void clickSaveButton(View v) {
+        ListView userList = (ListView)findViewById(R.id.users_list);
+
         //TODO: implement update group members
         finish();
     }

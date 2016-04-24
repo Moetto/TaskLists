@@ -24,6 +24,15 @@ public class Task implements Serializable {
     private double latitude;
     private boolean completed;
     private static final String TAG = "TaskListsTask";
+    public static final String
+    ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_task",
+    ACTION_GET_TASK = "t3waii.tasklists.action_update_task",
+    ACTION_POST_TASK = "t3waii.tasklists.action_update_task",
+    ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
+    EXTRA_TASK_AS_JSON_STRING = "extraTask",
+    EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks";
+
+
 
     public Task(long id, int creator) {
         this.id = id;
@@ -65,6 +74,7 @@ public class Task implements Serializable {
             estimatedCompletion = new Date(estimatedCompletionEpoch);
         } catch (JSONException e) {
         }
+        children = new ArrayList<>();
     }
 
     public String getName() {
@@ -108,8 +118,13 @@ public class Task implements Serializable {
         }
     }
 
-    public boolean getCompleted() { return this.completed; }
-    public void complete() { this.completed = true; }
+    public boolean getCompleted() {
+        return this.completed;
+    }
+
+    public void complete() {
+        this.completed = true;
+    }
 
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
@@ -157,16 +172,15 @@ public class Task implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Task)) {
+        if (!(o instanceof Task)) {
             return false;
         }
 
         Task t = (Task) o;
 
-        if(this.getId() == t.getId() && this.getCreator() == t.getCreator()) {
+        if (this.getId() == t.getId()) {
             return true;
         }
-
         return false;
     }
 }

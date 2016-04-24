@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -118,9 +119,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         }
                         NetworkGroupMembers.getAllUsers(context);
                         break;
-                    case NetworkGroups.ACTION_GET_GROUP:
+                    case Group.ACTION_GET_GROUP:
                         Log.d(TAG, "Got group");
                         setMainMenuGroupItemsVisibility(true);
+                        groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
                         NetworkTasks.getTasks(context);
                         break;
                     case NetworkGroupMembers.ACTION_UPDATE_USERS:
@@ -129,12 +131,20 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                     case NetworkGroupMembers.ACTION_UPDATE_GROUP_MEMBERS:
                         Log.d(TAG, "Got updated list of group members");
                         break;
+                    case Invite.ACTION_INVITE_SENT:
+                        Log.d(TAG, "Invite sent");
+                        Toast.makeText(context, "Invite sent", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Group.ACTION_LEAVE_GROUP:
+                        Log.d(TAG, "Left group");
+                        groupId = 0;
+                        break;
                 }
             }
         };
         IntentFilter intentFilter = new IntentFilter(NetworkRegister.ACTION_REGISTERED);
         registerReceiver(broadcastReceiver, intentFilter);
-        intentFilter = new IntentFilter(NetworkGroups.ACTION_GET_GROUP);
+        intentFilter = new IntentFilter(Group.ACTION_GET_GROUP);
         registerReceiver(broadcastReceiver, intentFilter);
     }
 

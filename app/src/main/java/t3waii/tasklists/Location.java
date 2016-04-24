@@ -2,10 +2,12 @@ package t3waii.tasklists;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 /**
  * Created by matti on 4/7/16.
  */
-public class Location {
+public class Location implements Serializable{
     private String name;
     private LatLng latlng;
     private Long id;

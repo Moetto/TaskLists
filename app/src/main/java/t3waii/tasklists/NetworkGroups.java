@@ -24,9 +24,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class NetworkGroups {
     private final static String TAG = "NetworkGroups";
-    public final static String ACTION_GET_GROUP = "t3waii.tasklists.action_get_group",
-            ACTION_LEAVE_GROUP = "t3waii.tasklists.action_leave_group",
-            EXTRA_GROUP_NAME = "extraGroupName", EXTRA_MEMBERS_IDS = "extraMembersIds";
 
     public static void postNewGroup(final Context context, String name) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
@@ -68,7 +65,7 @@ public class NetworkGroups {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete groupmember succeeded");
                 Intent intent = new Intent();
-                intent.setAction(ACTION_LEAVE_GROUP);
+                intent.setAction(Group.ACTION_LEAVE_GROUP);
                 context.sendBroadcast(intent);
                 //TODO: remove tasks that are not created by you
                 //TODO: alter tasks that you have created to have no assigned or estimatedtime
@@ -113,14 +110,15 @@ public class NetworkGroups {
         try {
             JSONObject group = new JSONObject(response);
             Intent intent = new Intent();
-            intent.setAction(ACTION_GET_GROUP);
-            intent.putExtra(EXTRA_GROUP_NAME, group.getString("name"));
+            intent.setAction(Group.ACTION_GET_GROUP);
+            intent.putExtra(Group.EXTRA_GROUP_NAME, group.getString("name"));
+            intent.putExtra(Group.EXTRA_GROUP_ID, group.getInt("id"));
             JSONArray members = group.getJSONArray("members");
             ArrayList<Integer> membersList = new ArrayList<>();
             for (int i = 0; i < members.length(); i++) {
                 membersList.add((Integer) members.get(i));
             }
-            intent.putIntegerArrayListExtra(EXTRA_MEMBERS_IDS, membersList);
+            intent.putIntegerArrayListExtra(Group.EXTRA_MEMBERS_IDS, membersList);
             return intent;
         } catch (JSONException ex) {
             Log.e(TAG, Log.getStackTraceString(ex));
