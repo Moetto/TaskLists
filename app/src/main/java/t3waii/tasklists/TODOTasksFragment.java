@@ -1,5 +1,6 @@
 package t3waii.tasklists;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -7,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.Manifest;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
@@ -37,7 +36,6 @@ import java.util.Set;
  * Created by moetto on 3/11/16.
  */
 public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenuItemClickListener {
-    public static final String TAG = "TODOTasksFragment";
     private static final int LOCATION_PERMISSION_REQUEST = 11;
     private GoogleApiClient googleApiClient;
     private PendingIntent geofencePendingIntent;
@@ -52,6 +50,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        TAG = "TODOTasksFragment";
         googleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .build();
@@ -186,6 +185,11 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
         } else {
             addGeoFence(task);
         }
+    }
+
+    @Override
+    protected boolean affectThisFragment(Task task) {
+        return task.getResponsibleMemberId() == MainActivity.getSelfGroupMemberId() && !task.getCompleted();
     }
 
     private void addGeoFence(Task task) {

@@ -2,13 +2,10 @@ package t3waii.tasklists;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +18,6 @@ import java.util.List;
  */
 
 public class CompletedTasksFragment extends TasksFragment {
-    public static final String TAG = "CompletedTasksFragment";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,6 +27,7 @@ public class CompletedTasksFragment extends TasksFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        TAG = "CompletedTasksFragment";
         ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
 
             @Override
@@ -89,5 +85,10 @@ public class CompletedTasksFragment extends TasksFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+    }
+
+    @Override
+    protected boolean affectThisFragment(Task task) {
+        return task.getCompleted();
     }
 }
