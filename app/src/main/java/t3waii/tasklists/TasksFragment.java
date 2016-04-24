@@ -81,8 +81,8 @@ public abstract class TasksFragment extends ListFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         if (broadcastReceiver != null) {
             getActivity().unregisterReceiver(broadcastReceiver);
         }
