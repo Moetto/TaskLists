@@ -27,8 +27,6 @@ import java.util.List;
  */
 
 public class OpenTasksFragment extends TasksFragment {
-    public static final String TAG = "OpenTasksFragment";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +36,7 @@ public class OpenTasksFragment extends TasksFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        TAG = "OpenTasksFragment";
         ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
@@ -122,33 +121,10 @@ public class OpenTasksFragment extends TasksFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+    }
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received broadcast");
-                switch (intent.getAction()) {
-                    case Task.ACTION_UPDATE_TASKS:
-                        try {
-                            JSONArray tasksArray = new JSONArray(intent.getStringExtra(Task.EXTRA_TASKS_AS_JSON_ARRAY));
-                            List<Task> updatedTasks = new ArrayList<>();
-                            for (int i = 0; i < tasksArray.length(); i++) {
-                                Task task = new Task(tasksArray.getJSONObject(i));
-                                if (task.getResponsibleMemberId() == 0) {
-                                    updatedTasks.add(task);
-                                }
-                            }
-                            updateTasks(updatedTasks);
-                        } catch (JSONException ex) {
-                            Log.d(TAG, Log.getStackTraceString(ex));
-                        }
-                        break;
-                }
-            }
-        };
-
-        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK}) {
-            intentFilters.add(new IntentFilter(action));
-        }
+    @Override
+    protected boolean affectThisFragment(Task task) {
+        return task.getResponsibleMemberId() == 0 && !task.getCompleted();
     }
 }

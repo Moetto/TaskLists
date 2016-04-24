@@ -21,8 +21,6 @@ import java.util.List;
  */
 
 public class CompletedTasksFragment extends TasksFragment {
-    public static final String TAG = "CompletedTasksFragment";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,6 +30,7 @@ public class CompletedTasksFragment extends TasksFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        TAG = "CompletedTasksFragment";
         ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
 
             @Override
@@ -89,5 +88,10 @@ public class CompletedTasksFragment extends TasksFragment {
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+    }
+
+    @Override
+    protected boolean affectThisFragment(Task task) {
+        return task.getCompleted();
     }
 }

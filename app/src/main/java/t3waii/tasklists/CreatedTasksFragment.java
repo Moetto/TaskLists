@@ -24,8 +24,6 @@ import java.util.List;
  */
 
 public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnMenuItemClickListener {
-    public static final String TAG = "CreatedTasksFragment";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +33,7 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        TAG = "CreatedTasksFragment";
         ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
@@ -130,6 +129,11 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(taskListAdapter);
+    }
+
+    @Override
+    protected boolean affectThisFragment(Task task) {
+        return task.getCreator() == MainActivity.getSelfGroupMemberId() && !task.getCompleted();
     }
 
     @Override

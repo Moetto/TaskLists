@@ -1,10 +1,17 @@
 package t3waii.tasklists;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
-import android.widget.ArrayAdapter;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +24,7 @@ import java.util.Set;
  * Created by matti on 4/23/16.
  */
 public abstract class TasksFragment extends ListFragment {
+    protected String TAG = "TasksFragment";
     protected static List<Task> tasks = new ArrayList<>();
     protected BroadcastReceiver broadcastReceiver;
     protected List<IntentFilter> intentFilters = new ArrayList<>();
@@ -68,6 +76,69 @@ public abstract class TasksFragment extends ListFragment {
             }
         }
         MainActivity.updateDatasets();
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Received broadcast");
+                switch (intent.getAction()) {
+                    case Task.ACTION_UPDATE_TASKS:
+                        try {
+                            JSONArray tasksArray = new JSONArray(intent.getStringExtra(Task.EXTRA_TASKS_AS_JSON_ARRAY));
+                            List<Task> updatedTasks = new ArrayList<>();
+                            for (int i = 0; i < tasksArray.length(); i++) {
+                                Task task = new Task(tasksArray.getJSONObject(i));
+                                if (affectThisFragment(task)) {
+                                    updatedTasks.add(task);
+                                }
+                            }
+                            updateTasks(updatedTasks);
+                        } catch (JSONException ex) {
+                            Log.d(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+
+                    case Task.ACTION_POST_TASK:
+                        try {
+                            JSONObject taskJson = new JSONObject(intent.getStringExtra(Task.EXTRA_TASK_AS_JSON_STRING));
+                            Task task = new Task(taskJson);
+                            if (affectThisFragment(task)) {
+                                addTask(task);
+                            }
+                        } catch (JSONException ex) {
+                            Log.d(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+
+                    case Task.ACTION_REMOVE_TASK:
+                        try {
+                            JSONObject taskJson = new JSONObject(intent.getStringExtra(Task.EXTRA_TASK_AS_JSON_STRING));
+                            Task task = new Task(taskJson);
+                            if (affectThisFragment(task)) {
+                                removeTask(task);
+                            }
+                        } catch (JSONException ex) {
+                            Log.d(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+                }
+            }
+        };
+
+        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK}) {
+            intentFilters.add(new IntentFilter(action));
+        }
+
+    }
+
+    protected boolean affectThisFragment(Task task) {
+        return false;
     }
 
     @Override
