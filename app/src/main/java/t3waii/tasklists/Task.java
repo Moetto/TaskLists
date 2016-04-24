@@ -18,7 +18,7 @@ public class Task implements Serializable {
     private Date deadline, estimatedCompletion;
     private List<Task> children;
     private int responsibleMember;
-    private long id;
+    private int id;
     private int creator;
     private double longitude;
     private double latitude;
@@ -34,7 +34,7 @@ public class Task implements Serializable {
 
 
 
-    public Task(long id, int creator) {
+    public Task(int id, int creator) {
         this.id = id;
         this.creator = creator;
         this.name = "";
@@ -45,7 +45,7 @@ public class Task implements Serializable {
     public Task(JSONObject taskAsJson) throws JSONException {
 
         try {
-            id = taskAsJson.getLong("id");
+            id = taskAsJson.getInt("id");
             creator = taskAsJson.getInt("creator");
         } catch (JSONException e) {
             Log.d(TAG, "unable to parse task id or creator!");
@@ -65,7 +65,7 @@ public class Task implements Serializable {
         } catch (JSONException e) {
         }
         try {
-            int deadlineEpoch = taskAsJson.getInt("deadline");
+            Long deadlineEpoch = taskAsJson.getLong("deadline");
             deadline = new Date(deadlineEpoch);
         } catch (JSONException e) {
         }
@@ -145,7 +145,7 @@ public class Task implements Serializable {
         return this.creator;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 

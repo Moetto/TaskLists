@@ -88,14 +88,14 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         }
 
         User u = (User) newTaskAssignedTo.getSelectedItem();
-        if(u.getId() > 0) { values.put("responsible_member", Long.toString(u.getId())); }
+        if(u.getId() > 0) { values.put("responsible_member", Integer.toString(u.getId())); }
 
         Location l = (Location) newTaskLocation.getSelectedItem();
-        if(l.getId() > 0) { values.put("location", Long.toString(l.getId())); }
+        if(l.getId() > 0) { values.put("location", Integer.toString(l.getId())); }
 
         Task parent = (Task) newTaskParentTask.getSelectedItem();
-        Long id = parent.getId();
-        if(id != -1) { values.put("parent", Long.toString(id)); }
+        int id = parent.getId();
+        if(id != -1) { values.put("parent", Integer.toString(id)); }
 
         Log.d(TAG, values.toString());
 
@@ -115,7 +115,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     private void setLocationElement() {
         newTaskLocation = (Spinner) findViewById(R.id.newTaskLocation);
         List<Location> locations = new ArrayList<>(MainActivity.getLocations());
-        locations.add(0, new Location(Long.valueOf(0), "No location", new LatLng(0, 0)));
+        locations.add(0, new Location(0, "No location", new LatLng(0, 0)));
         ArrayAdapter<Location> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskLocation.setAdapter(dataAdapter);

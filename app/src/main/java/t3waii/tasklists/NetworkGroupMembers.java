@@ -56,7 +56,7 @@ public class NetworkGroupMembers extends NetworkHandler{
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         for (User u : users) {
             final User user = u;
-            asyncHttpClient.delete(MainActivity.getServerAddress() + "groupmembers/" + Long.toString(user.getId()), new AsyncHttpResponseHandler() {
+            asyncHttpClient.delete(MainActivity.getServerAddress() + "groupmembers/" + Integer.toString(user.getId()), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.d(TAG, "Delete groupmember succeeded");

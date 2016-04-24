@@ -70,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         users.add(new User("Nimi4", 4));
         users.add(new User("Nimi5", 5));
         /*
-        locations.add(new Location((long) 1, "Paikka1", new LatLng(24, 23)));
-        locations.add(new Location((long) 2, "Paikka2", new LatLng(34, 33)));
-        locations.add(new Location((long) 3, "Paikka3", new LatLng(44, 43)));
-        locations.add(new Location((long) 4, "Paikka4", new LatLng(54, 53)));
-        locations.add(new Location((long) 5, "Paikka5", new LatLng(64, 63)));
+        locations.add(new Location(1, "Paikka1", new LatLng(24, 23)));
+        locations.add(new Location(2, "Paikka2", new LatLng(34, 33)));
+        locations.add(new Location(3, "Paikka3", new LatLng(44, 43)));
+        locations.add(new Location(4, "Paikka4", new LatLng(54, 53)));
+        locations.add(new Location(5, "Paikka5", new LatLng(64, 63)));
         */
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

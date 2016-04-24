@@ -10,9 +10,9 @@ import java.io.Serializable;
 public class Location implements Serializable{
     private String name;
     private LatLng latlng;
-    private Long id;
+    private int id;
 
-    public Location(Long id, String name, LatLng latlng) {
+    public Location(int id, String name, LatLng latlng) {
         this.id = id;
         this.name = name;
         this.latlng = latlng;
@@ -21,7 +21,7 @@ public class Location implements Serializable{
     @Override
     public String toString() { return this.name; }
 
-    public Long getId() { return this.id; }
+    public int getId() { return this.id; }
 
     public LatLng getLatlng() { return this.latlng; }
 }
