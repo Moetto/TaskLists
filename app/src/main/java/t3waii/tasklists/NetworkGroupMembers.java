@@ -100,7 +100,7 @@ public class NetworkGroupMembers extends NetworkHandler{
             groupIdAsString = ""+groupId;
         }
         RequestParams params = new RequestParams("group", groupIdAsString);
-        getAsyncHttpClient().patch(getUrl() + MainActivity.getSelfGroupMember() +"/", params, new AsyncHttpResponseHandler() {
+        getAsyncHttpClient().patch(getUrl() + MainActivity.getSelfGroupMemberId() +"/", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Joined group");

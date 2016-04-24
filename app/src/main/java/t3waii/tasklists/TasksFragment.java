@@ -84,7 +84,11 @@ public abstract class TasksFragment extends ListFragment {
     public void onDestroy() {
         super.onDestroy();
         if (broadcastReceiver != null) {
-            getActivity().unregisterReceiver(broadcastReceiver);
+            try {
+                getActivity().unregisterReceiver(broadcastReceiver);
+            } catch (IllegalArgumentException ex) {
+
+            }
         }
     }
 }

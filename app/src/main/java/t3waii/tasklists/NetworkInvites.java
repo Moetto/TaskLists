@@ -42,7 +42,7 @@ public class NetworkInvites extends NetworkHandler {
 
     public static void postInvites(final Context context, List<User> invited) {
         for (User user : invited) {
-            RequestParams params = new RequestParams("invited", user.getId(), "inviter", MainActivity.getSelfGroupMember().getId());
+            RequestParams params = new RequestParams("invited", user.getId(), "inviter", MainActivity.getSelfGroupMemberId());
             getAsyncHttpClient().post(getUrl(), params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

@@ -22,17 +22,19 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by matti on 4/21/16.
  */
-public class NetworkGroups {
+public class NetworkGroups extends NetworkHandler {
     private final static String TAG = "NetworkGroups";
 
-    public static void postNewGroup(final Context context, String name) {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
+    private static String getUrl() {
+        return getBaseUrl() + "/groups/";
+    }
 
+    public static void postNewGroup(final Context context, String name) {
+        AsyncHttpClient asyncHttpClient = getAsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("name", name);
 
-        asyncHttpClient.post(MainActivity.getServerAddress() + "groups/", params, new AsyncHttpResponseHandler() {
+        asyncHttpClient.post(getUrl(), params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Post new group succeeded");
@@ -57,10 +59,8 @@ public class NetworkGroups {
     // Send leave group to server
     // on success: hide/show menu items, notify other groupmembers, clear users, locations and tasks that are not created by you
     public static void leaveGroup(final Context context) {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
 
-        asyncHttpClient.delete(MainActivity.getServerAddress() + "groups/", new AsyncHttpResponseHandler() {
+        getAsyncHttpClient().delete(getUrl(), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete groupmember succeeded");
@@ -82,16 +82,8 @@ public class NetworkGroups {
         });
     }
 
-    public static void updateDatasets() {
-        if (ManageGroupLocations.locationListAdapter != null) {
-            ManageGroupLocations.locationListAdapter.notifyDataSetChanged();
-        }
-    }
-
     public static void getGroup(final Context context, int groupId) {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
-        asyncHttpClient.get(context, MainActivity.getServerAddress() + "/groups/" + groupId, new AsyncHttpResponseHandler() {
+        getAsyncHttpClient().get(context, getUrl() + groupId, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Intent intent = buildGroupIntent(new String(responseBody));
