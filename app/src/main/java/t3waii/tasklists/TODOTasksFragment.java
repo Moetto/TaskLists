@@ -56,7 +56,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                 .build();
         googleApiClient.connect();
 
-        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

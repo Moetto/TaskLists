@@ -34,7 +34,7 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         TAG = "CreatedTasksFragment";
-        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, new ArrayList<Task>()) {
+        ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
             View.OnClickListener handleClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
