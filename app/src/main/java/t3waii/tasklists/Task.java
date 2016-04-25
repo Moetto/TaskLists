@@ -30,6 +30,7 @@ public class Task implements Serializable {
     ACTION_POST_TASK = "t3waii.tasklists.action_post_task",
     ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
     ACTION_REMOVE_TASK_BY_ID = "t3waii.tasklists.action_remove_task_id",
+    ACTION_TASKS_SHOULD_UPDATE = "t3waii.tasklists.action_should_update_tasks",
     EXTRA_TASK_AS_JSON_STRING = "extraTask",
     EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks",
     EXTRA_TASK_ID = "extraTaskId";

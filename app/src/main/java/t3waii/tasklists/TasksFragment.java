@@ -63,11 +63,13 @@ public abstract class TasksFragment extends ListFragment {
     // Update tasks to match the given list
     public void updateTasks(List<Task> updatedTasks) {
         // Remove tasks that do not exist in updated list
+        ArrayList<Task> remove = new ArrayList<>();
         for (Task existingTask : tasks) {
             if (!updatedTasks.contains(existingTask)) {
-                tasks.remove(existingTask);
+                remove.add(existingTask);
             }
         }
+        tasks.removeAll(remove);
 
         // Loop updated list and either update or add task
         for (Task newTask : updatedTasks) {
