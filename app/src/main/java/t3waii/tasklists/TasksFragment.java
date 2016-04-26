@@ -144,7 +144,9 @@ public abstract class TasksFragment extends ListFragment {
                         try {
                             JSONObject taskJson = new JSONObject(intent.getStringExtra(Task.EXTRA_TASK_AS_JSON_STRING));
                             Task task = new Task(taskJson);
-                            handleEditTask(task);
+                            if(handleEditTask(task)) {
+                                MainActivity.updateDatasets();
+                            }
                         } catch (JSONException ex) {
                             Log.d(TAG, Log.getStackTraceString(ex));
                         }
