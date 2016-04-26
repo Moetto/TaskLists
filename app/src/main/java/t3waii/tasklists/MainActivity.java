@@ -120,9 +120,16 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         break;
                     case NetworkGroupMembers.ACTION_UPDATE_USERS:
                         Log.d(TAG, "Got updated list of users");
-                        break;
-                    case NetworkGroupMembers.ACTION_UPDATE_GROUP_MEMBERS:
-                        Log.d(TAG, "Got updated list of group members");
+                        JSONArray jsonUsers;
+                        try {
+                            jsonUsers = new JSONArray(intent.getStringExtra(NetworkGroupMembers.EXTRA_USER_JSON_ARRAY_STRING));
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error in users JSON");
+                            Log.e(TAG, Log.getStackTraceString(e));
+                            break;
+                        }
+                        updateUsers(jsonUsers);
+                        Log.d(TAG, "users:" + users.size());
                         break;
                     case Invite.ACTION_INVITE_SENT:
                         Log.d(TAG, "Invite sent");
@@ -164,7 +171,14 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 }
             }
         };
-        for (String action : new String[]{Location.ACTION_NEW_LOCATION, Location.ACTION_GET_LOCATIONS, Location.ACTION_LOCATION_REMOVED, Group.ACTION_GET_GROUP, NetworkRegister.ACTION_REGISTERED, Group.ACTION_GET_GROUP, Task.ACTION_TASKS_SHOULD_UPDATE}) {
+        for (String action : new String[]{
+                Group.ACTION_GET_GROUP,
+                Location.ACTION_NEW_LOCATION,
+                Location.ACTION_GET_LOCATIONS,
+                Location.ACTION_LOCATION_REMOVED,
+                NetworkGroupMembers.ACTION_UPDATE_USERS,
+                NetworkRegister.ACTION_REGISTERED,
+                Task.ACTION_TASKS_SHOULD_UPDATE}) {
             IntentFilter intentFilter = new IntentFilter(action);
             registerReceiver(broadcastReceiver, intentFilter);
         }
@@ -240,6 +254,37 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         this.menu.findItem(R.id.dialog_managegroup_settings).setVisible(isInGroup);
         this.menu.findItem(R.id.dialog_leavegroup_settings).setVisible(isInGroup);
         this.menu.findItem(R.id.dialog_managegrouplocations_settings).setVisible(isInGroup);
+    }
+
+    private void updateUsers(JSONArray jsonUsers) {
+        List<User> newUsers = new ArrayList<>();
+
+        for(int i = 0; i < jsonUsers.length(); i++) {
+            try {
+                User u = new User(jsonUsers.get(i).toString());
+                newUsers.add(u);
+            } catch (JSONException e) {
+                continue;
+            }
+        }
+
+        for(User u : users) {
+            if(!newUsers.contains(u)) {
+                users.remove(u);
+            }
+        }
+
+        for(User newUser : newUsers) {
+            if(users.contains(newUser)) {
+                for(User u : users) {
+                    if(u.equals(newUser)) {
+                        u.updateUser(newUser);
+                    }
+                }
+            } else {
+                users.add(newUser);
+            }
+        }
     }
 
     // Take new group name, show/hide menu elements and register new group

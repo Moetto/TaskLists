@@ -22,7 +22,6 @@ import cz.msebera.android.httpclient.Header;
 public class NetworkGroupMembers extends NetworkHandler{
     public final static String TAG = "TasksNetworkGroupMem",
             ACTION_UPDATE_USERS = "t3waii.tasklists.action_update_users",
-            ACTION_UPDATE_GROUP_MEMBERS = "t3waii.tasklists.action_update_group_members",
             EXTRA_USER_JSON_OBJECT_STRING = "extraUser",
             EXTRA_USER_JSON_ARRAY_STRING = "extraUserList";
 
@@ -30,7 +29,7 @@ public class NetworkGroupMembers extends NetworkHandler{
         return getBaseUrl()+"/groupmembers/";
     }
 
-    public static void getAllUsers(Context context) {
+    public static void getAllUsers(final Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         asyncHttpClient.get(MainActivity.getServerAddress() + "groupmembers/", new AsyncHttpResponseHandler() {
@@ -42,6 +41,7 @@ public class NetworkGroupMembers extends NetworkHandler{
                 intent.setAction(ACTION_UPDATE_USERS);
                 String response = new String(responseBody);
                 intent.putExtra(EXTRA_USER_JSON_ARRAY_STRING, response);
+                context.sendBroadcast(intent);
             }
 
             @Override
@@ -72,23 +72,6 @@ public class NetworkGroupMembers extends NetworkHandler{
                 }
             });
         }
-    }
-
-    public static void getGroupMembers(final Context context) {
-        getAsyncHttpClient().get(getUrl(), new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Intent intent = new Intent();
-                intent.setAction(ACTION_UPDATE_GROUP_MEMBERS);
-                intent.putExtra(EXTRA_USER_JSON_ARRAY_STRING, new String(responseBody));
-                context.sendBroadcast(intent);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });
     }
 
     public static void joinGroup(final Context context, final int groupId) {
