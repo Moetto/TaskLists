@@ -454,6 +454,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         Log.d(TAG, "resumed");
         if(intent.getAction().equals(GeofenceIntentService.ACTION_LOCATION_NEAR)) {
             pager.setCurrentItem(0);
+        } else if (intent.getAction().equals(Task.ACTION_TASK_COMPLETE)) {
+            pager.setCurrentItem(3);
         }
     }
 }
