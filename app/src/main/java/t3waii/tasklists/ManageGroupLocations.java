@@ -24,8 +24,12 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,10 +37,11 @@ import java.util.Map;
  */
 public class ManageGroupLocations extends Activity {
     private int PLACE_PICKER_REQUEST = 1;
+    private List<Location> locations = new ArrayList<>();
     public static ArrayAdapter<Location> locationListAdapter;
-    private static final String TAG = "ManageGroupLocations";
+    private static final String TAG = "TasksManageGroupLocati";
     private BroadcastReceiver locationReceiver;
-    IntentFilter intentFilter = new IntentFilter(NetworkLocations.ACTION_NEW_LOCATION);
+    String[] actions = new String[]{Location.ACTION_LOCATION_REMOVED, Location.ACTION_NEW_LOCATION, Location.ACTION_NEW_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +61,9 @@ public class ManageGroupLocations extends Activity {
                 }
             }
         });
-
-        if(locationListAdapter == null) {
-            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, MainActivity.getLocations()) {
+        locations = MainActivity.getLocations();
+        if (locationListAdapter == null) {
+            locationListAdapter = new ArrayAdapter<Location>(this, R.layout.location_layout, locations) {
                 View.OnClickListener handleClick = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -72,8 +77,8 @@ public class ManageGroupLocations extends Activity {
 
                         switch (v.getId()) {
                             case R.id.remove_location:
-                                if(l != null) {
-                                    NetworkLocations.deleteLocation(l);
+                                if (l != null) {
+                                    NetworkLocations.deleteLocation(ManageGroupLocations.this, l);
                                 }
                                 break;
                             default:
@@ -100,16 +105,51 @@ public class ManageGroupLocations extends Activity {
             };
         }
 
-        ListView locationList = (ListView)findViewById(R.id.location_list);
+        final ListView locationList = (ListView) findViewById(R.id.location_list);
         locationList.setAdapter(locationListAdapter);
 
-        if(locationListAdapter.getCount() == 0) {
+        if (locationListAdapter.getCount() == 0) {
             fab.performClick();
         }
 
         locationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                switch (intent.getAction()) {
+                    case Location.ACTION_GET_LOCATIONS:
+                        try {
+                            locations.clear();
+                            locations.addAll(Location.parseLocations(intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON)));
+                        } catch (JSONException ex) {
+                            Log.e(TAG, "Error in locations JSON");
+                            Log.e(TAG, Log.getStackTraceString(ex));
+                        }
+                        locationListAdapter.notifyDataSetChanged();
+                        break;
+                    case Location.ACTION_NEW_LOCATION:
+                        try {
+                            Location newLocation = new Location(new JSONObject(intent.getStringExtra(Location.EXTRA_LOCATION)));
+                            if (!locations.contains(newLocation)) {
+                                locations.add(newLocation);
+                                locationListAdapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException ex) {
+                            Log.e(TAG, "Error in location data");
+                            Log.e(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+                    case Location.ACTION_LOCATION_REMOVED:
+                        Log.d(TAG, "Removing location");
+                        int removedId = intent.getIntExtra(Location.EXTRA_REMOVED_ID, 0);
+                        for(Location location : locations) {
+                            if (location.getId() == removedId) {
+                                locations.remove(location);
+                                break;
+                            }
+                        }
+                        locationListAdapter.notifyDataSetChanged();
+                        break;
+                }
                 Log.d(TAG, "Received new locations");
             }
         };
@@ -127,7 +167,7 @@ public class ManageGroupLocations extends Activity {
     private void takeLocationName(final LatLng location) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View promptView = layoutInflater.inflate(R.layout.group_new, null);
-        TextView textLabel = (TextView)promptView.findViewById(R.id.textLabel);
+        TextView textLabel = (TextView) promptView.findViewById(R.id.textLabel);
         textLabel.setText(getResources().getString(R.string.location_name));
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.NameDialogCustom);
         alertDialogBuilder.setView(promptView);
@@ -165,6 +205,9 @@ public class ManageGroupLocations extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(locationReceiver, intentFilter);
+        for (String action : actions) {
+            IntentFilter intentFilter = new IntentFilter(action);
+            registerReceiver(locationReceiver, intentFilter);
+        }
     }
 }

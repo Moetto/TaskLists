@@ -162,6 +162,10 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
     }
 
     private void addGeoFence(Task task) {
+        if (task.getLongitude() == 0 || task.getLatitude() == 0 ){
+            return;
+        }
+        Log.d(TAG, "Adding geofence for "+task.getName());
         new AsyncTask<Task, Void, Void>() {
             @Override
             protected Void doInBackground(Task... params) {
@@ -235,7 +239,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
 
     @Override
     public void addTask(Task task) {
-        addGeoFence(task);
+        addGeoFenceIfAvailable(task);
         super.addTask(task);
     }
 

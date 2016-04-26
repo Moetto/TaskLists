@@ -25,9 +25,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class NetworkLocations  {
     private final static String TAG = "TaskNetworkLocations";
-    static final String ACTION_NEW_LOCATION = "t3waii.tasklists.action_new_location",
-    ACTION_LOCATION_REMOVED = "removedLocation",
-    EXTRA_LOCATION = "location";
 
     public static void postNewLocation(Map<String, String> values, final Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
@@ -40,7 +37,8 @@ public class NetworkLocations  {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Post new location succeeded");
-                Log.d(TAG, new String(responseBody));
+                String response = new String(responseBody);
+                Log.d(TAG, response);
                 JSONObject jsonLocation;
                 try {
                     jsonLocation = new JSONObject(new String(responseBody));
@@ -51,7 +49,8 @@ public class NetworkLocations  {
                 Location l = parseLocation(jsonLocation);
                 if(l != null) {
                     Intent intent = new Intent();
-                    intent.setAction(ACTION_NEW_LOCATION);
+                    intent.setAction(Location.ACTION_NEW_LOCATION);
+                    intent.putExtra(Location.EXTRA_LOCATION, response);
                     intent.putExtra("test", new Task(1, 1));
                     context.sendBroadcast(intent);
                     //MainActivity.locations.add(l);
@@ -70,16 +69,23 @@ public class NetworkLocations  {
         });
     }
 
-    public static void getLocations(Context context) {
+    public static void getLocations(final Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         asyncHttpClient.get(MainActivity.getServerAddress() + "locations/", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
                 Log.d(TAG, "Getting locations succeeded");
                 String response = new String(responseBody);
                 Log.d(TAG, response);
 
+                Intent intent = new Intent();
+                intent.setAction(Location.ACTION_GET_LOCATIONS);
+                intent.putExtra(Location.EXTRA_LOCATIONS_JSON, response);
+                context.sendBroadcast(intent);
+
+                /*
                 // get jsonarray
                 JSONArray locations;
                 try {
@@ -135,6 +141,7 @@ public class NetworkLocations  {
                         MainActivity.addLocation(l);
                     }
                 }
+                */
             }
 
             @Override
@@ -147,17 +154,17 @@ public class NetworkLocations  {
         });
     }
 
-    public static void deleteLocation(final Location location) {
+    public static void deleteLocation(final Context context, final Location location) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
-        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Integer.toString(location.getId()), new AsyncHttpResponseHandler() {
+        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Integer.toString(location.getId()) +"/", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete location succeeded");
                 Intent intent = new Intent();
-                intent.setAction(ACTION_LOCATION_REMOVED);
-                intent.putExtra(EXTRA_LOCATION, location);
-                MainActivity.removeLocation(location);
+                intent.setAction(Location.ACTION_LOCATION_REMOVED);
+                intent.putExtra(Location.EXTRA_REMOVED_ID, location.getId());
+                context.sendBroadcast(intent);
             }
 
             @Override

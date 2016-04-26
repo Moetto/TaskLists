@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -20,6 +21,7 @@ public class GcmListener extends GcmListenerService {
 
     private static final String
     GCM_ACTION_INVITE = "invite",
+    GCM_ACTION_TASKS_CHANGED = "tasks_changed",
     GROUP_NAME = "group_name",
     GROUP_ID = "group_id",
     INVITER_NAME = "inviter_name",
@@ -59,6 +61,15 @@ public class GcmListener extends GcmListenerService {
                             .build();
                     NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     notificationManager.notify(id, notification);
+                    break;
+                case (GCM_ACTION_TASKS_CHANGED):
+                    Intent intent = new Intent();
+                    intent.setAction(Task.ACTION_TASKS_SHOULD_UPDATE);
+                    sendBroadcast(intent);
+                    Log.d(TAG, "Sent broadcast telling tasks should update");
+                    break;
+                default:
+                    Log.e(TAG, "Unhandled message "+messageAsJson.getString("action"));
                     break;
             }
         } catch (JSONException ex) {

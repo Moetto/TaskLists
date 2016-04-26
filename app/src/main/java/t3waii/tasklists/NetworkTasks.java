@@ -25,7 +25,7 @@ public class NetworkTasks {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         RequestParams params = new RequestParams();
-        for(String key : values.keySet()) {
+        for (String key : values.keySet()) {
             params.add(key, values.get(key));
         }
         asyncHttpClient.post(MainActivity.getServerAddress() + "tasks/", params, new AsyncHttpResponseHandler() {
@@ -115,24 +115,10 @@ public class NetworkTasks {
                 String response = new String(responseBody);
                 Log.d(TAG, response);
 
-                //JSONArray tasks;
                 Intent intent = new Intent();
                 intent.setAction(Task.ACTION_UPDATE_TASKS);
                 intent.putExtra(Task.EXTRA_TASKS_AS_JSON_ARRAY, response);
                 context.sendBroadcast(intent);
-                /*
-                    for(int j = 0; j < OpenTasksFragment.openTasks.size(); j++) {
-                        Task t = OpenTasksFragment.openTasks.get(j);
-                        if(t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
-                            t.updateTask(task);
-                            taskUpdated = true;
-                            Log.d(TAG, "task updated!");
-                            break;
-                        }
-                    }
-                }
-                MainActivity.updateDatasets();
-                */
             }
 
             @Override

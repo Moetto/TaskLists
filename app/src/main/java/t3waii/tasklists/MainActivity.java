@@ -27,6 +27,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -125,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         setMainMenuGroupItemsVisibility(true);
                         groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
                         NetworkTasks.getTasks(context);
+                        NetworkLocations.getLocations(context);
                         break;
                     case NetworkGroupMembers.ACTION_UPDATE_USERS:
                         Log.d(TAG, "Got updated list of users");
@@ -140,13 +145,42 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         Log.d(TAG, "Left group");
                         groupId = 0;
                         break;
+                    case Location.ACTION_GET_LOCATIONS:
+                        Log.d(TAG, "Got list of locations");
+                        locations.clear();
+                        try {
+                            for (Location location : Location.parseLocations(intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON))) {
+                                locations.add(location);
+                            }
+                       } catch (JSONException ex) {
+                            Log.e(TAG, "Error in locations JSON");
+                            Log.e(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+                    case Location.ACTION_NEW_LOCATION:
+                        try {
+                            addLocation(new Location(new JSONObject(intent.getStringExtra(Location.EXTRA_LOCATION))));
+                        } catch (JSONException ex) {
+                            Log.e(TAG, "Erronous location");
+                            Log.e(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
+                    case Location.ACTION_LOCATION_REMOVED:
+                        break;
+                    case Task.ACTION_TASKS_SHOULD_UPDATE:
+                        Log.d(TAG, "Should update tasks");
+                        NetworkTasks.getTasks(context);
+                        break;
+                    default:
+                        Log.d(TAG, "Received non-handled action " + intent.getAction());
+                        break;
                 }
             }
         };
-        IntentFilter intentFilter = new IntentFilter(NetworkRegister.ACTION_REGISTERED);
-        registerReceiver(broadcastReceiver, intentFilter);
-        intentFilter = new IntentFilter(Group.ACTION_GET_GROUP);
-        registerReceiver(broadcastReceiver, intentFilter);
+        for (String action : new String[]{Location.ACTION_NEW_LOCATION, Location.ACTION_GET_LOCATIONS, Location.ACTION_LOCATION_REMOVED, Group.ACTION_GET_GROUP, NetworkRegister.ACTION_REGISTERED, Group.ACTION_GET_GROUP, Task.ACTION_TASKS_SHOULD_UPDATE}) {
+            IntentFilter intentFilter = new IntentFilter(action);
+            registerReceiver(broadcastReceiver, intentFilter);
+        }
     }
 
     @Override
@@ -205,8 +239,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     }
 
     public static CreatedTasksFragment getCreatedTasksFragment() {
-        for(Fragment f : fragments) {
-            if(f instanceof CreatedTasksFragment) {
+        for (Fragment f : fragments) {
+            if (f instanceof CreatedTasksFragment) {
                 return (CreatedTasksFragment) f;
             }
         }
@@ -334,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return new ArrayList<>(locations);
     }
 
-    public static void removeLocation(Location location){
+    public static void removeLocation(Location location) {
         locations.remove(location);
     }
 
@@ -348,5 +382,11 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public static List<User> getUsers() {
         return new ArrayList<>(users);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }
