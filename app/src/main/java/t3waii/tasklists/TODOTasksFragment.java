@@ -165,11 +165,11 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
     }
 
     private void addGeoFence(Task task) {
-        if (task.getLongitude() == 0 || task.getLatitude() == 0 ){
-            Log.d(TAG, "No geofence needed for "+task.getName());
+        if (task.getLongitude() == 0 || task.getLatitude() == 0) {
+            Log.d(TAG, "No geofence needed for " + task.getName());
             return;
         }
-        Log.d(TAG, "Adding geofence for "+task.getName());
+        Log.d(TAG, "Adding geofence for " + task.getName());
         new AsyncTask<Task, Void, Void>() {
             @Override
             protected Void doInBackground(Task... params) {
@@ -227,7 +227,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int taskId = item.getIntent().getIntExtra("taskId", 0);
-        Log.d(TAG, "taskId:" + Integer.toString(taskId)); //getActionView().toString()
+        Log.d(TAG, "taskId:" + Integer.toString(taskId));
 
         switch (item.getItemId()) {
             case R.id.cancel_task:

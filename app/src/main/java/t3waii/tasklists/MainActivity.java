@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                             for (Location location : Location.parseLocations(intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON))) {
                                 locations.add(location);
                             }
-                       } catch (JSONException ex) {
+                        } catch (JSONException ex) {
                             Log.e(TAG, "Error in locations JSON");
                             Log.e(TAG, Log.getStackTraceString(ex));
                         }
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     private void updateUsers(JSONArray jsonUsers) {
         List<User> newUsers = new ArrayList<>();
 
-        for(int i = 0; i < jsonUsers.length(); i++) {
+        for (int i = 0; i < jsonUsers.length(); i++) {
             try {
                 User u = new User(jsonUsers.get(i).toString());
                 newUsers.add(u);
@@ -277,16 +277,16 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
             }
         }
 
-        for(User u : users) {
-            if(!newUsers.contains(u)) {
+        for (User u : users) {
+            if (!newUsers.contains(u)) {
                 users.remove(u);
             }
         }
 
-        for(User newUser : newUsers) {
-            if(users.contains(newUser)) {
-                for(User u : users) {
-                    if(u.equals(newUser)) {
+        for (User newUser : newUsers) {
+            if (users.contains(newUser)) {
+                for (User u : users) {
+                    if (u.equals(newUser)) {
                         u.updateUser(newUser);
                     }
                 }
@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return new ArrayList<>(users);
     }
 
-    public static List<User> getNonMembers () {
+    public static List<User> getNonMembers() {
         ArrayList<User> nonMembers = new ArrayList<>(getUsers());
         nonMembers.removeAll(getGroupMembers());
         return nonMembers;
@@ -433,8 +433,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public static List<User> getGroupMembers() {
         ArrayList<User> result = new ArrayList<>();
-        for(User u : getUsers()) {
-            if(u.getGroupId() == groupId) {
+        for (User u : getUsers()) {
+            if (u.getGroupId() == groupId) {
                 result.add(u);
             }
         }
@@ -452,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         super.onResume();
         Intent intent = getIntent();
         Log.d(TAG, "resumed");
-        if(intent.getAction().equals(GeofenceIntentService.ACTION_LOCATION_NEAR)) {
+        if (intent.getAction().equals(GeofenceIntentService.ACTION_LOCATION_NEAR)) {
             pager.setCurrentItem(0);
         }
     }

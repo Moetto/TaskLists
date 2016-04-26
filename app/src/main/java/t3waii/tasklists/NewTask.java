@@ -58,7 +58,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         values.put("title", title);
         values.put("description", title);
 
-        if(dueDate.getText().toString().length() > 0 || dueTime.getText().toString().length() > 0) {
+        if (dueDate.getText().toString().length() > 0 || dueTime.getText().toString().length() > 0) {
             Calendar c = Calendar.getInstance(Locale.getDefault());
 
             int year = c.get(Calendar.YEAR);
@@ -67,7 +67,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
             int hour = 23;
             int minute = 59;
 
-            if(dueDate.getText().toString().length() > 0) {
+            if (dueDate.getText().toString().length() > 0) {
                 Calendar date = Calendar.getInstance(Locale.getDefault());
                 date.setTime(dateFormatter.parse(dueDate.getText().toString(), new ParsePosition(0)));
                 year = date.get(Calendar.YEAR);
@@ -75,7 +75,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 day = date.get(Calendar.DATE);
             }
 
-            if(dueTime.getText().toString().length() > 0) {
+            if (dueTime.getText().toString().length() > 0) {
                 Calendar time = Calendar.getInstance();
                 time.setTime(timeFormatter.parse(dueTime.getText().toString(), new ParsePosition(0)));
                 hour = time.get(Calendar.HOUR_OF_DAY);
@@ -133,7 +133,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
                 newDate.set(year, monthOfYear, dayOfMonth);
                 dueDate.setText(dateFormatter.format(newDate.getTime()));
                 dueDate.clearFocus();
-                if(dueTime.getText().length() == 0) {
+                if (dueTime.getText().length() == 0) {
                     dueTimeDialog.show();
                 }
             }

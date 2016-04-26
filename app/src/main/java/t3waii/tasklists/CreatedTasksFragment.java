@@ -121,7 +121,7 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int taskId = item.getIntent().getIntExtra("taskId", 0);
-        Log.d(TAG, "taskId:" + Integer.toString(taskId)); //getActionView().toString()
+        Log.d(TAG, "taskId:" + Integer.toString(taskId));
 
         switch (item.getItemId()) {
             case R.id.edit_task:
