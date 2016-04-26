@@ -1,7 +1,13 @@
 package t3waii.tasklists;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +33,7 @@ public class CompletedTasksFragment extends TasksFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        TAG = "CompletedTasksFragment";
+        TAG = "TaskCompletedFragment";
         ArrayAdapter<Task> taskListAdapter = new ArrayAdapter<Task>(getContext(), R.layout.complex_task, tasks) {
 
             @Override
@@ -63,5 +69,23 @@ public class CompletedTasksFragment extends TasksFragment {
     @Override
     protected boolean affectThisFragment(Task task) {
         return task.getCompleted();
+    }
+
+    @Override
+    public void reallyAddTaskThisTime(Task task) {
+        if (task.getCreator() == MainActivity.getSelfGroupMemberId() && task.getResponsibleMemberId() != MainActivity.getSelfGroupMemberId()) {
+            Intent onClickIntent = new Intent(getContext(), MainActivity.class);
+            onClickIntent.setAction(Task.ACTION_TASK_COMPLETE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), task.getId(), onClickIntent, PendingIntent.FLAG_ONE_SHOT);
+
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notification = new Notification.Builder(getContext())
+                    .setContentText("Your task "+task.getName() + " has been completed")
+                    .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                    .setContentIntent(pendingIntent)
+                    .build();
+            notificationManager.notify(task.getId(), notification);
+        }
+        super.reallyAddTaskThisTime(task);
     }
 }

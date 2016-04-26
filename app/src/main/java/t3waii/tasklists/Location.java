@@ -59,4 +59,5 @@ public class Location implements Serializable {
         }
         return locationsList;
     }
+
 }

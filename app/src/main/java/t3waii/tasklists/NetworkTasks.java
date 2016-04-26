@@ -1,8 +1,10 @@
 package t3waii.tasklists;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -18,8 +20,12 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by moetto on 3/29/16.
  */
-public class NetworkTasks {
+public class NetworkTasks extends NetworkHandler {
     public final static String TAG = "NetworkTasks";
+
+    protected static String getUrl() {
+        return getBaseUrl() + "/tasks/";
+    }
 
     public static void postNewTask(final Context context, Map<String, String> values) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
@@ -74,19 +80,19 @@ public class NetworkTasks {
         });
     }
 
-    public static  void claimTask(final Context context, int taskId) {
+    public static void claimTask(final Context context, int taskId) {
         RequestParams params = new RequestParams();
         params.put("responsible_member", Integer.toString(MainActivity.getSelfGroupMemberId()));
         editTask(context, taskId, params);
     }
 
-    public static  void unclaimTask(final Context context, int taskId) {
+    public static void unclaimTask(final Context context, int taskId) {
         RequestParams params = new RequestParams();
         params.put("responsible_member", "");
         editTask(context, taskId, params);
     }
 
-    public static  void editTask(final Context context, int taskId, RequestParams params) {
+    public static void editTask(final Context context, int taskId, RequestParams params) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         asyncHttpClient.patch(MainActivity.getServerAddress() + "tasks/" + taskId + "/", params, new AsyncHttpResponseHandler() {
@@ -135,5 +141,9 @@ public class NetworkTasks {
                 }
             }
         });
+    }
+
+    public static void completeTask(final Context context, int id) {
+        editTask(context, id, new RequestParams("completed", "true"));
     }
 }

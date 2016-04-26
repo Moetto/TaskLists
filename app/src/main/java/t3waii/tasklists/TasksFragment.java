@@ -31,9 +31,15 @@ public abstract class TasksFragment extends ListFragment {
             if (t.getId() == task.getId() && t.getCreator() == task.getCreator()) {
                 t.updateTask(task);
                 MainActivity.updateDatasets();
+                Log.d(TAG, "Updated existing task");
                 return;
             }
         }
+        Log.d(TAG, "Add task");
+        reallyAddTaskThisTime(task);
+    }
+
+    public void reallyAddTaskThisTime(Task task ){
         tasks.add(task);
         MainActivity.updateDatasets();
     }
@@ -81,7 +87,7 @@ public abstract class TasksFragment extends ListFragment {
                     }
                 }
             } else {
-                tasks.add(newTask);
+                addTask(newTask);
             }
         }
         MainActivity.updateDatasets();
@@ -182,12 +188,10 @@ public abstract class TasksFragment extends ListFragment {
                 return true;
             }
         }
-
         if(affectThisFragment(task)) {
-            tasks.add(task);
+            reallyAddTaskThisTime(task);
             return true;
         }
-
         return false;
     }
 
