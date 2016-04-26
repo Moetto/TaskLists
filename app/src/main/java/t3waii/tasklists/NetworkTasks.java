@@ -80,6 +80,12 @@ public class NetworkTasks {
         editTask(context, taskId, params);
     }
 
+    public static  void unclaimTask(final Context context, int taskId) {
+        RequestParams params = new RequestParams();
+        params.put("responsible_member", 0);
+        editTask(context, taskId, params);
+    }
+
     public static  void editTask(final Context context, int taskId, RequestParams params) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
