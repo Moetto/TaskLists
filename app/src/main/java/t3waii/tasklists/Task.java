@@ -2,6 +2,8 @@ package t3waii.tasklists;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,16 +26,16 @@ public class Task implements Serializable {
     private boolean completed;
     private static final String TAG = "TaskListsTask";
     public static final String
-    ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_tasks",
-    ACTION_GET_TASK = "t3waii.tasklists.action_get_task",
-    ACTION_POST_TASK = "t3waii.tasklists.action_post_task",
-    ACTION_UPDATE_TASK = "t3waii.tasklists.action_update_task",
-    ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
-    ACTION_REMOVE_TASK_BY_ID = "t3waii.tasklists.action_remove_task_id",
-    ACTION_TASKS_SHOULD_UPDATE = "t3waii.tasklists.action_should_update_tasks",
-    EXTRA_TASK_AS_JSON_STRING = "extraTask",
-    EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks",
-    EXTRA_TASK_ID = "extraTaskId";
+            ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_tasks",
+            ACTION_GET_TASK = "t3waii.tasklists.action_get_task",
+            ACTION_POST_TASK = "t3waii.tasklists.action_post_task",
+            ACTION_UPDATE_TASK = "t3waii.tasklists.action_update_task",
+            ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
+            ACTION_REMOVE_TASK_BY_ID = "t3waii.tasklists.action_remove_task_id",
+            ACTION_TASKS_SHOULD_UPDATE = "t3waii.tasklists.action_should_update_tasks",
+            EXTRA_TASK_AS_JSON_STRING = "extraTask",
+            EXTRA_TASKS_AS_JSON_ARRAY = "extraTasks",
+            EXTRA_TASK_ID = "extraTaskId";
 
 
     public Task(int id, int creator) {
@@ -74,6 +76,24 @@ public class Task implements Serializable {
             int estimatedCompletionEpoch = taskAsJson.getInt("estimated_completion_time");
             estimatedCompletion = new Date(estimatedCompletionEpoch);
         } catch (JSONException e) {
+        }
+        int locationId = 0;
+        try {
+            locationId = taskAsJson.getInt("location");
+            Log.d(TAG, "Should add location for "+name);
+        } catch (JSONException ex) {
+        }
+        if (locationId != 0) {
+            List<Location> locations = MainActivity.getLocations();
+            for (Location location : locations) {
+                if(location.getId() == locationId) {
+                    LatLng latLng = location.getLatlng();
+                    latitude = latLng.latitude;
+                    longitude = latLng.longitude;
+                    Log.d(TAG, "Added location for task");
+                    break;
+                }
+            }
         }
     }
 
@@ -165,4 +185,5 @@ public class Task implements Serializable {
         }
         return false;
     }
+
 }
