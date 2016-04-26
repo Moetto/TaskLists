@@ -409,6 +409,19 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return new ArrayList<>(locations);
     }
 
+    public static Task getTaskById(int taskId) {
+        for (Fragment f : fragments) {
+            TasksFragment tf = (TasksFragment) f;
+            for(Task t : tf.getTasks()) {
+                if(t.getId() == taskId) {
+                    return t;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static void removeLocation(Location location) {
         locations.remove(location);
     }

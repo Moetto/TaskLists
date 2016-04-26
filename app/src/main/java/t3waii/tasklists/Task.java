@@ -21,6 +21,7 @@ public class Task implements Serializable {
     private int responsibleMember;
     private int id;
     private int creator;
+    private int location;
     private double longitude;
     private double latitude;
     private boolean completed;
@@ -90,6 +91,7 @@ public class Task implements Serializable {
                     LatLng latLng = location.getLatlng();
                     latitude = latLng.latitude;
                     longitude = latLng.longitude;
+                    this.location = locationId;
                     Log.d(TAG, "Added location for task");
                     break;
                 }
@@ -138,6 +140,8 @@ public class Task implements Serializable {
     public int getResponsibleMemberId() {
         return this.responsibleMember;
     }
+
+    public int getLocation() { return this.location; }
 
     public void setAssignedTo(User newAssignedTo) {
         this.responsibleMember = newAssignedTo.getId();

@@ -191,6 +191,10 @@ public abstract class TasksFragment extends ListFragment {
         return false;
     }
 
+    protected void openEditTask(Task task) {
+        
+    }
+
     protected boolean affectThisFragment(Task task) {
         return false;
     }
@@ -205,5 +209,9 @@ public abstract class TasksFragment extends ListFragment {
 
             }
         }
+    }
+
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
 }

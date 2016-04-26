@@ -236,7 +236,23 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                 return true;
             case R.id.edit_task:
                 Log.d(TAG, "edit clicked");
+
+                Task t = null;
+                for (Task task : tasks) {
+                    if (task.getId() == taskId) {
+                        t = task;
+                        break;
+                    }
+                }
+
+                Intent intent = new Intent(getContext(), NewTask.class);
+                intent.putExtra("edit", true);
+                intent.putExtra("taskId", t.getId());
+                intent.putExtra("creator", t.getCreator() == MainActivity.getSelfGroupMemberId() ? true : false);
+                intent.putExtra("assigned", true);
+                startActivity(intent);
                 return true;
+
             default:
                 Log.d(TAG, "dunno what was clicked");
                 return false;
