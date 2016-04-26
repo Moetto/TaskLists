@@ -68,19 +68,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         fragments.add(new OpenTasksFragment());
         fragments.add(new CompletedTasksFragment());
 
-        //TODO: remove
-        users.add(new User("Nimi1", 1));
-        users.add(new User("Nimi2", 2));
-        users.add(new User("Nimi3", 3));
-        users.add(new User("Nimi4", 4));
-        users.add(new User("Nimi5", 5));
-        /*
-        locations.add(new Location(1, "Paikka1", new LatLng(24, 23)));
-        locations.add(new Location(2, "Paikka2", new LatLng(34, 33)));
-        locations.add(new Location(3, "Paikka3", new LatLng(44, 43)));
-        locations.add(new Location(4, "Paikka4", new LatLng(54, 53)));
-        locations.add(new Location(5, "Paikka5", new LatLng(64, 63)));
-        */
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         GoogleAccountManager googleAccountManager = new GoogleAccountManager();
