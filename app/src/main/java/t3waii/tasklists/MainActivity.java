@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         int groupId = intent.getIntExtra(NetworkRegister.EXTRA_GROUP_ID, 0);
                         if (groupId != 0) {
                             NetworkGroups.getGroup(context, groupId);
-                            NetworkGroupMembers.getGroupMembers(context);
                         }
                         NetworkGroupMembers.getAllUsers(context);
                         break;
@@ -227,6 +226,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public static int getSelfGroupMemberId() {
         return selfGroupMemberId;
+    }
+
+    public static int getGroupId() {
+        return groupId;
     }
 
     public static void updateDatasets() {

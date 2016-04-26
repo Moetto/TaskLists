@@ -15,6 +15,7 @@ public class User implements Serializable {
     private int id;
     private int groupId;
     public final static String TAG = "TaskUser";
+
     public User(String name, int id) {
         this.name = name;
         this.id = id;
@@ -32,12 +33,14 @@ public class User implements Serializable {
         }
         try {
             this.groupId = jsonUser.getInt("group");
-        } catch (JSONException e) {}
+        } catch (JSONException e) {
+        }
     }
 
-    public String getName() { return this.name; }
-    public int getId() { return this.id; }
-    public int getGroupId() { return this.groupId; }
+    public int getGroupId() {
+        return this.groupId;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -53,7 +56,7 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof User)) {
+        if (!(o instanceof User)) {
             return false;
         }
 
