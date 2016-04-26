@@ -421,6 +421,16 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         return new ArrayList<>(users);
     }
 
+    public static List<User> getGroupMembers() {
+        ArrayList<User> result = new ArrayList<>();
+        for(User u : getUsers()) {
+            if(u.getGroupId() == groupId) {
+                result.add(u);
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);
