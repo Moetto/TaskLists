@@ -78,7 +78,7 @@ public class GcmListener extends GcmListenerService {
                     break;
                 case (GCM_ACTION_LOCATIONS_CHANGED):
                     Intent locationChangedIntent = new Intent();
-                    locationChangedIntent.setAction(Location.ACTION_GET_LOCATIONS);
+                    locationChangedIntent.setAction(Location.ACTION_UPDATE_LOCATIONS);
                     sendBroadcast(locationChangedIntent);
                     Log.d(TAG, "Send broadcast to update locations");
                     break;

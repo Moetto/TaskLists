@@ -2,6 +2,7 @@ package t3waii.tasklists;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -51,16 +52,19 @@ public class NetworkGroupMembers extends NetworkHandler{
         });
     }
 
-    public static void deleteGroupMembers(List<User> users) {
+    public static void deleteGroupMembers(final Context context, List<User> users) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         for (User u : users) {
             final User user = u;
-            asyncHttpClient.delete(MainActivity.getServerAddress() + "groupmembers/" + Integer.toString(user.getId()), new AsyncHttpResponseHandler() {
+            RequestParams params = new RequestParams("group", "");
+            asyncHttpClient.patch(MainActivity.getServerAddress() + "groupmembers/" + Integer.toString(user.getId()) + "/", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.d(TAG, "Delete groupmember succeeded");
-                    MainActivity.removeGroupMember(user);
+                    Intent intent = new Intent();
+                    intent.setAction(Group.ACTION_UPDATE_GROUP);
+                    context.sendBroadcast(intent);
                 }
 
                 @Override

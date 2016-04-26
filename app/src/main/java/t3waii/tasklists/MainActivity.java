@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         Log.d(TAG, "Got list of locations");
                         locations.clear();
                         try {
+                            Log.d(TAG, intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON));
                             for (Location location : Location.parseLocations(intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON))) {
                                 locations.add(location);
                             }
@@ -157,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                             Log.e(TAG, "Erronous location");
                             Log.e(TAG, Log.getStackTraceString(ex));
                         }
+                        break;
+                    case Location.ACTION_UPDATE_LOCATIONS:
+                        NetworkLocations.getLocations(MainActivity.this);
                         break;
                     case Location.ACTION_LOCATION_REMOVED:
                         break;
@@ -422,7 +426,19 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     }
 
     public static List<User> getNonMembers () {
-        return getUsers().remove(getGroupMembers());
+        ArrayList<User> nonMembers = new ArrayList<>(getUsers());
+        nonMembers.removeAll(getGroupMembers());
+        return nonMembers;
+    }
+
+    public static List<User> getGroupMembers() {
+        ArrayList<User> result = new ArrayList<>();
+        for(User u : getUsers()) {
+            if(u.getGroupId() == groupId) {
+                result.add(u);
+            }
+        }
+        return result;
     }
 
     @Override

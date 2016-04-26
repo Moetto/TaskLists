@@ -21,6 +21,7 @@ public class Location implements Serializable {
             ACTION_GET_LOCATIONS = "get_locations",
             ACTION_NEW_LOCATION = "t3waii.tasklists.action_new_location",
             ACTION_LOCATION_REMOVED = "removedLocation",
+            ACTION_UPDATE_LOCATIONS = "t3waii.tasklists.action_update_locations",
             EXTRA_LOCATION = "location",
             EXTRA_LOCATIONS_JSON = "extraLocations",
             EXTRA_REMOVED_ID = "extraLocationRemovedId";

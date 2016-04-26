@@ -23,14 +23,14 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by matti on 4/21/16.
  */
-public class NetworkLocations  {
+public class NetworkLocations {
     private final static String TAG = "TaskNetworkLocations";
 
     public static void postNewLocation(Map<String, String> values, final Context context) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
         RequestParams params = new RequestParams();
-        for(String key : values.keySet()) {
+        for (String key : values.keySet()) {
             params.add(key, values.get(key));
         }
         asyncHttpClient.post(MainActivity.getServerAddress() + "locations/", params, new AsyncHttpResponseHandler() {
@@ -40,23 +40,22 @@ public class NetworkLocations  {
                 String response = new String(responseBody);
                 Log.d(TAG, response);
                 JSONObject jsonLocation;
+                Location l;
                 try {
                     jsonLocation = new JSONObject(new String(responseBody));
+                    l = new Location(jsonLocation);
                 } catch (JSONException e) {
                     Log.d(TAG, "Unable to parse post location response");
                     return;
                 }
-                Location l = parseLocation(jsonLocation);
-                if(l != null) {
-                    Intent intent = new Intent();
-                    intent.setAction(Location.ACTION_NEW_LOCATION);
-                    intent.putExtra(Location.EXTRA_LOCATION, response);
-                    intent.putExtra("test", new Task(1, 1));
-                    context.sendBroadcast(intent);
-                    //MainActivity.locations.add(l);
-                    //updateDatasets();
-                    //TODO: notify other group members of new location
-                }
+                Intent intent = new Intent();
+                intent.setAction(Location.ACTION_NEW_LOCATION);
+                intent.putExtra(Location.EXTRA_LOCATION, response);
+                intent.putExtra("test", new Task(1, 1));
+                context.sendBroadcast(intent);
+                //MainActivity.locations.add(l);
+                //updateDatasets();
+                //TODO: notify other group members of new location
             }
 
             @Override
@@ -157,7 +156,7 @@ public class NetworkLocations  {
     public static void deleteLocation(final Context context, final Location location) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.addHeader("Authorization", "Token " + MainActivity.getApiId());
-        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Integer.toString(location.getId()) +"/", new AsyncHttpResponseHandler() {
+        asyncHttpClient.delete(MainActivity.getServerAddress() + "locations/" + Integer.toString(location.getId()) + "/", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Delete location succeeded");
