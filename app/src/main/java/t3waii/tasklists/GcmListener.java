@@ -22,6 +22,7 @@ public class GcmListener extends GcmListenerService {
     private static final String
     GCM_ACTION_INVITE = "invite",
     GCM_ACTION_TASKS_CHANGED = "tasks_changed",
+    GCM_ACTION_GROUP_CHANGED = "group_changed",
     GROUP_NAME = "group_name",
     GROUP_ID = "group_id",
     INVITER_NAME = "inviter_name",
@@ -67,6 +68,12 @@ public class GcmListener extends GcmListenerService {
                     intent.setAction(Task.ACTION_TASKS_SHOULD_UPDATE);
                     sendBroadcast(intent);
                     Log.d(TAG, "Sent broadcast telling tasks should update");
+                    break;
+                case (GCM_ACTION_GROUP_CHANGED):
+                    Intent groupChangeIntent = new Intent();
+                    groupChangeIntent.setAction(Group.ACTION_UPDATE_GROUP);
+                    sendBroadcast(groupChangeIntent);
+                    Log.d(TAG, "Sent broadcast to update group");
                     break;
                 default:
                     Log.e(TAG, "Unhandled message "+messageAsJson.getString("action"));

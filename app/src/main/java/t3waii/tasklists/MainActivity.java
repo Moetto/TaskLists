@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                     case Group.ACTION_GET_GROUP:
                         Log.d(TAG, "Got group");
                         setMainMenuGroupItemsVisibility(true);
-                        groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
+                        selfGroupMemberId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
                         NetworkTasks.getTasks(context);
                         NetworkLocations.getLocations(context);
                         break;
@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         Log.d(TAG, "Should update tasks");
                         NetworkTasks.getTasks(context);
                         break;
+                    case Group.ACTION_UPDATE_GROUP:
+                        NetworkGroups.getGroup(MainActivity.this, selfGroupMemberId);
                     default:
                         Log.d(TAG, "Received non-handled action " + intent.getAction());
                         break;
