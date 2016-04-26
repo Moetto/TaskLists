@@ -71,6 +71,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                     switch (v.getId()) {
                         case R.id.complete_button:
                             Log.d(TAG, "complete clicked");
+                            NetworkTasks.completeTask(getContext(), t.getId());
                             break;
                         case R.id.edit_button:
                             Log.d(TAG, "edit clicked");

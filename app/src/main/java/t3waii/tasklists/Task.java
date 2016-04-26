@@ -80,13 +80,13 @@ public class Task implements Serializable {
         int locationId = 0;
         try {
             locationId = taskAsJson.getInt("location");
-            Log.d(TAG, "Should add location for "+name);
+            Log.d(TAG, "Should add location for " + name);
         } catch (JSONException ex) {
         }
         if (locationId != 0) {
             List<Location> locations = MainActivity.getLocations();
             for (Location location : locations) {
-                if(location.getId() == locationId) {
+                if (location.getId() == locationId) {
                     LatLng latLng = location.getLatlng();
                     latitude = latLng.latitude;
                     longitude = latLng.longitude;
@@ -94,6 +94,11 @@ public class Task implements Serializable {
                     break;
                 }
             }
+        }
+        try {
+            completed = taskAsJson.getBoolean("completed");
+        } catch (JSONException e) {
+
         }
     }
 
