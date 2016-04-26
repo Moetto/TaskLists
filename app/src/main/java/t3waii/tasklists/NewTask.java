@@ -37,7 +37,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
     private SimpleDateFormat dateFormatter, timeFormatter;
 
-    private Spinner newTaskParentTask, newTaskAssignedTo, newTaskLocation;
+    private Spinner newTaskAssignedTo, newTaskLocation;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +46,6 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         setDueDateDialog();
         setDueTimeDialog();
 
-        setParentTaskElement();
         setLocationElement();
         setAssignedToElement();
     }
@@ -93,10 +92,6 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         Location l = (Location) newTaskLocation.getSelectedItem();
         if(l.getId() > 0) { values.put("location", Integer.toString(l.getId())); }
 
-        Task parent = (Task) newTaskParentTask.getSelectedItem();
-        int id = parent.getId();
-        if(id != -1) { values.put("parent", Integer.toString(id)); }
-
         Log.d(TAG, values.toString());
 
         NetworkTasks.postNewTask(this, values);
@@ -119,23 +114,6 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
         ArrayAdapter<Location> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newTaskLocation.setAdapter(dataAdapter);
-    }
-
-    private void setParentTaskElement() {
-        List<Task> createdTasks = new ArrayList<>();
-
-        Task noParent = new Task(-1, new User("", 0).getId());
-        noParent.setName("No parent");
-        createdTasks.add(noParent);
-
-        CreatedTasksFragment f = MainActivity.getCreatedTasksFragment();
-        if(f != null) {
-            createdTasks.addAll(f.getUnclaimedTasks());
-        }
-
-        newTaskParentTask = (Spinner) findViewById(R.id.newTaskParentTask);
-        ArrayAdapter<Task> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, createdTasks);
-        newTaskParentTask.setAdapter(dataAdapter);
     }
 
     //Create DatePickerDialog functionality

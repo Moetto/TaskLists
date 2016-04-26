@@ -95,28 +95,9 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 Task task = tasks.get(position);
-                if (task.getChildren().isEmpty()) {
-                    convertView = createComplexTask(inflater, task);
-                    TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
-                    textView.setText(task.getName());
-                    return convertView;
-                }
-
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
-                View claimButton = convertView.findViewById(R.id.claim_button);
-                claimButton.setVisibility(View.GONE);
-                addListenerAndTag(convertView, task);
-                TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
-                parentText.setText(task.getName());
-
-                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
-                List<Task> children = task.getChildren();
-                for (int i = 0; i < children.size(); i++) {
-                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size() - 1) ? true : false), children.get(i));
-                    TextView textView = (TextView) childView.findViewById(R.id.complex_text);
-                    textView.setText(children.get(i).getName());
-                    linearLayout.addView(childView, (i + 1));
-                }
+                convertView = createComplexTask(inflater, task);
+                TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
+                textView.setText(task.getName());
                 return convertView;
             }
 
@@ -126,18 +107,6 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                 View claimButton = view.findViewById(R.id.claim_button);
                 claimButton.setVisibility(View.GONE);
                 addListenerAndTag(view, task);
-                return view;
-            }
-
-            private View createChildView(LayoutInflater inflater, boolean lastChild, Task childTask) {
-                View view = inflater.inflate(R.layout.child_complex_task, null);
-                View claimButton = view.findViewById(R.id.claim_button);
-                claimButton.setVisibility(View.GONE);
-                if (lastChild) {
-                    ImageView imageView = (ImageView) view.findViewById(R.id.arrow);
-                    imageView.setImageResource(R.drawable.tree_end);
-                }
-                addListenerAndTag(view, childTask);
                 return view;
             }
 
@@ -258,6 +227,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
         switch (item.getItemId()) {
             case R.id.cancel_task:
                 Log.d(TAG, "cancel clicked");
+                NetworkTasks.unclaimTask(getContext(), taskId);
                 return true;
             case R.id.edit_task:
                 Log.d(TAG, "edit clicked");

@@ -16,7 +16,6 @@ import java.util.List;
 public class Task implements Serializable {
     private String name, description;
     private Date deadline, estimatedCompletion;
-    private List<Task> children;
     private int responsibleMember;
     private int id;
     private int creator;
@@ -28,6 +27,7 @@ public class Task implements Serializable {
     ACTION_UPDATE_TASKS = "t3waii.tasklists.action_update_tasks",
     ACTION_GET_TASK = "t3waii.tasklists.action_get_task",
     ACTION_POST_TASK = "t3waii.tasklists.action_post_task",
+    ACTION_UPDATE_TASK = "t3waii.tasklists.action_update_task",
     ACTION_REMOVE_TASK = "t3waii.tasklists.action_remove_task",
     ACTION_REMOVE_TASK_BY_ID = "t3waii.tasklists.action_remove_task_id",
     ACTION_TASKS_SHOULD_UPDATE = "t3waii.tasklists.action_should_update_tasks",
@@ -40,7 +40,6 @@ public class Task implements Serializable {
         this.id = id;
         this.creator = creator;
         this.name = "";
-        this.children = new ArrayList<>();
         this.completed = false;
     }
 
@@ -76,7 +75,6 @@ public class Task implements Serializable {
             estimatedCompletion = new Date(estimatedCompletionEpoch);
         } catch (JSONException e) {
         }
-        children = new ArrayList<>();
     }
 
     public String getName() {
@@ -103,23 +101,6 @@ public class Task implements Serializable {
         this.estimatedCompletion = newEstimatedCompletion;
     }
 
-    public List<Task> getChildren() {
-        return this.children;
-    }
-
-    public void addChild(Task childTask) {
-        this.children.add(childTask);
-    }
-
-    public void removeChild(Task childTask) {
-        for (int i = 0; i < this.children.size(); i++) {
-            if (this.children.get(i).getId() == childTask.getId()) {
-                this.children.remove(i);
-                return;
-            }
-        }
-    }
-
     public boolean getCompleted() {
         return this.completed;
     }
@@ -131,7 +112,6 @@ public class Task implements Serializable {
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
         this.deadline = newValues.getDeadline();
-        this.children = newValues.getChildren();
         this.responsibleMember = newValues.getResponsibleMemberId();
     }
 

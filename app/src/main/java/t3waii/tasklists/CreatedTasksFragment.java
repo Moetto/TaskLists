@@ -49,6 +49,9 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
                     switch (v.getId()) {
                         case R.id.claim_button:
                             Log.d(TAG, "claim clicked");
+                            if(t != null) {
+                                NetworkTasks.claimTask(getContext(), t.getId());
+                            }
                             break;
                         case R.id.edit_button:
                             PopupMenu popupMenu = new PopupMenu(getActivity(), v);
@@ -72,28 +75,9 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 Task task = tasks.get(position);
-                if(task.getChildren().isEmpty()) {
-                    convertView = createComplexTask(inflater, task);
-                    TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
-                    textView.setText(task.getName());
-                    return convertView;
-                }
-
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
-                View completeButton = convertView.findViewById(R.id.complete_button);
-                completeButton.setVisibility(View.GONE);
-                addListenerAndTag(convertView, task);
-                TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
-                parentText.setText(task.getName());
-
-                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
-                List<Task> children = task.getChildren();
-                for(int i = 0; i < children.size(); i++) {
-                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size()-1) ? true : false), children.get(i));
-                    TextView textView = (TextView) childView.findViewById(R.id.complex_text);
-                    textView.setText(children.get(i).getName());
-                    linearLayout.addView(childView, (i+1));
-                }
+                convertView = createComplexTask(inflater, task);
+                TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
+                textView.setText(task.getName());
                 return convertView;
             }
 
@@ -102,18 +86,6 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
                 View completeButton = view.findViewById(R.id.complete_button);
                 completeButton.setVisibility(View.GONE);
                 addListenerAndTag(view, task);
-                return view;
-            }
-
-            private View createChildView(LayoutInflater inflater, boolean lastChild, Task childTask) {
-                View view = inflater.inflate(R.layout.child_complex_task, null);
-                View completeButton = view.findViewById(R.id.complete_button);
-                completeButton.setVisibility(View.GONE);
-                if (lastChild){
-                    ImageView imageView = (ImageView)view.findViewById(R.id.arrow);
-                    imageView.setImageResource(R.drawable.tree_end);
-                }
-                addListenerAndTag(view, childTask);
                 return view;
             }
 
