@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     private static Set<User> groupMembers = new HashSet<>();
     private static Set<Location> locations = new HashSet<>();
     private static List<Fragment> fragments = new ArrayList<>();
-    private static int selfGroupMemberId;
+    private static int selfGroupMemberId, groupId;
     BroadcastReceiver broadcastReceiver;
 
     @Override
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                     case Group.ACTION_GET_GROUP:
                         Log.d(TAG, "Got group");
                         setMainMenuGroupItemsVisibility(true);
-                        groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
+                        MainActivity.groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
                         NetworkTasks.getTasks(context);
                         NetworkLocations.getLocations(context);
                         break;
@@ -165,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         Log.d(TAG, "Should update tasks");
                         NetworkTasks.getTasks(context);
                         break;
+                    case Group.ACTION_UPDATE_GROUP:
+                        NetworkGroups.getGroup(MainActivity.this, selfGroupMemberId);
                     default:
                         Log.d(TAG, "Received non-handled action " + intent.getAction());
                         break;
@@ -420,5 +422,15 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        Log.d(TAG, "resumed");
+        if(intent.getAction().equals(GeofenceIntentService.ACTION_LOCATION_NEAR)) {
+            pager.setCurrentItem(0);
+        }
     }
 }

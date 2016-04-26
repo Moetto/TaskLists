@@ -82,7 +82,7 @@ public class NetworkTasks {
 
     public static  void unclaimTask(final Context context, int taskId) {
         RequestParams params = new RequestParams();
-        params.put("responsible_member", 0);
+        params.put("responsible_member", "");
         editTask(context, taskId, params);
     }
 

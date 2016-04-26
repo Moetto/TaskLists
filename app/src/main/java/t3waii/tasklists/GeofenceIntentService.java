@@ -18,6 +18,7 @@ import java.util.List;
 public class GeofenceIntentService extends IntentService {
 
     private static final String TAG = "TaskGeofenceService";
+    public static final String ACTION_LOCATION_NEAR = "t3waii.tasklists.action_location_near";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -45,28 +46,43 @@ public class GeofenceIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
+        switch (geofenceTransition) {
+            case Geofence.GEOFENCE_TRANSITION_DWELL:
+            case Geofence.GEOFENCE_TRANSITION_ENTER: {
+                // Get the geofences that were triggered. A single event can trigger
+                // multiple geofences.
+                List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                for (Geofence geofence : triggeringGeofences) {
+                    Log.d(TAG, geofence.toString());
+                    Intent notificationIntent = new Intent(this, MainActivity.class);
+                    notificationIntent.setAction(ACTION_LOCATION_NEAR);
+                    String[] taskDetails = geofence.getRequestId().split(";", 2);
+                    int taskId = Integer.parseInt(taskDetails[0]);
+                    String taskName = taskDetails[1];
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, taskId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    Notification notification = new Notification.Builder(this)
+                            .setContentText("You are near " + taskName + " location")
+                            .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                            .setContentIntent(pendingIntent)
+                            .build();
 
-            // Get the geofences that were triggered. A single event can trigger
-            // multiple geofences.
-            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-            NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-            for (Geofence geofence : triggeringGeofences) {
-                Log.d(TAG, geofence.toString());
-                Intent notificationIntent = new Intent(this, TODOTasksFragment.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(geofence.getRequestId()), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                String[] taskDetails = geofence.getRequestId().split(";", 1);
-                int taskId = Integer.parseInt(taskDetails[0]);
-                String taskName = taskDetails[1];
-                Notification notification = new Notification.Builder(this)
-                        .setAutoCancel(true)
-                        .setContentText("You are near " + taskName + " location")
-                        .setSmallIcon(android.R.drawable.sym_def_app_icon)
-                        .setContentIntent(pendingIntent)
-                        .build();
-
-                notificationManager.notify(taskId, notification);
+                    notificationManager.notify(taskId, notification);
+                    Log.d(TAG, taskName + " location is near");
+                }
+                break;
             }
+            case Geofence.GEOFENCE_TRANSITION_EXIT:
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+                for (Geofence geofence : triggeringGeofences) {
+                    String[] taskDetails = geofence.getRequestId().split(";", 2);
+                    int taskId = Integer.parseInt(taskDetails[0]);
+                    notificationManager.cancel(taskId);
+                    Log.d(TAG, "Canceling notification for "+taskDetails[1]);
+                    break;
+                }
+
         }
     }
 }

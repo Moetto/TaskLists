@@ -50,7 +50,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        TAG = "TODOTasksFragment";
+        TAG = "TaskTODOTasksFragment";
         googleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .build();
@@ -141,7 +141,9 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
     }
 
     private void addGeoFenceIfAvailable(Task task) {
+        Log.d(TAG, "Checking if geofencing is available");
         if (task.getLatitude() == 0 || task.getLongitude() == 0) {
+            Log.d(TAG, "No need for geofence for " + task.getName());
             return;
         }
 
@@ -152,6 +154,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
         } else {
+            Log.d(TAG, "Already have permission to add geofence");
             addGeoFence(task);
         }
     }
@@ -163,6 +166,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
 
     private void addGeoFence(Task task) {
         if (task.getLongitude() == 0 || task.getLatitude() == 0 ){
+            Log.d(TAG, "No geofence needed for "+task.getName());
             return;
         }
         Log.d(TAG, "Adding geofence for "+task.getName());
@@ -206,6 +210,7 @@ public class TODOTasksFragment extends TasksFragment implements PopupMenu.OnMenu
                                            int[] grantResults) {
         if (requestCode == LOCATION_PERMISSION_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Got permission to location. Adding pending fences");
                 addPendingGeofences();
             }
         }
