@@ -55,27 +55,9 @@ public class OpenTasksFragment extends TasksFragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 Task task = tasks.get(position);
-                if (task.getChildren().isEmpty()) {
-                    convertView = createComplexTask(inflater, task);
-                    TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
-                    textView.setText(task.getName());
-                    return convertView;
-                }
-
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.group_task_parent, null);
-                hideUnnecessaryButtons(convertView);
-                addListenerAndTag(convertView, task);
-                TextView parentText = (TextView) convertView.findViewById(R.id.complex_text);
-                parentText.setText(task.getName());
-
-                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.group_task_parent_layout);
-                List<Task> children = task.getChildren();
-                for (int i = 0; i < children.size(); i++) {
-                    View childView = createChildView(getActivity().getLayoutInflater(), (i == (children.size() - 1) ? true : false), children.get(i));
-                    TextView textView = (TextView) childView.findViewById(R.id.complex_text);
-                    textView.setText(children.get(i).getName());
-                    linearLayout.addView(childView, (i + 1));
-                }
+                convertView = createComplexTask(inflater, task);
+                TextView textView = (TextView) convertView.findViewById(R.id.complex_text);
+                textView.setText(task.getName());
                 return convertView;
             }
 
@@ -83,17 +65,6 @@ public class OpenTasksFragment extends TasksFragment {
                 View view = inflater.inflate(R.layout.complex_task, null);
                 hideUnnecessaryButtons(view);
                 addListenerAndTag(view, task);
-                return view;
-            }
-
-            private View createChildView(LayoutInflater inflater, boolean lastChild, Task childTask) {
-                View view = inflater.inflate(R.layout.child_complex_task, null);
-                hideUnnecessaryButtons(view);
-                if (lastChild) {
-                    ImageView imageView = (ImageView) view.findViewById(R.id.arrow);
-                    imageView.setImageResource(R.drawable.tree_end);
-                }
-                addListenerAndTag(view, childTask);
                 return view;
             }
 

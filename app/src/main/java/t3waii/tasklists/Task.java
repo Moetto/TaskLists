@@ -16,7 +16,6 @@ import java.util.List;
 public class Task implements Serializable {
     private String name, description;
     private Date deadline, estimatedCompletion;
-    private List<Task> children;
     private int responsibleMember;
     private int id;
     private int creator;
@@ -39,7 +38,6 @@ public class Task implements Serializable {
         this.id = id;
         this.creator = creator;
         this.name = "";
-        this.children = new ArrayList<>();
         this.completed = false;
     }
 
@@ -75,7 +73,6 @@ public class Task implements Serializable {
             estimatedCompletion = new Date(estimatedCompletionEpoch);
         } catch (JSONException e) {
         }
-        children = new ArrayList<>();
     }
 
     public String getName() {
@@ -102,23 +99,6 @@ public class Task implements Serializable {
         this.estimatedCompletion = newEstimatedCompletion;
     }
 
-    public List<Task> getChildren() {
-        return this.children;
-    }
-
-    public void addChild(Task childTask) {
-        this.children.add(childTask);
-    }
-
-    public void removeChild(Task childTask) {
-        for (int i = 0; i < this.children.size(); i++) {
-            if (this.children.get(i).getId() == childTask.getId()) {
-                this.children.remove(i);
-                return;
-            }
-        }
-    }
-
     public boolean getCompleted() {
         return this.completed;
     }
@@ -130,7 +110,6 @@ public class Task implements Serializable {
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
         this.deadline = newValues.getDeadline();
-        this.children = newValues.getChildren();
         this.responsibleMember = newValues.getResponsibleMemberId();
     }
 
