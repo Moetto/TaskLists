@@ -49,6 +49,9 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
                     switch (v.getId()) {
                         case R.id.claim_button:
                             Log.d(TAG, "claim clicked");
+                            if(t != null) {
+                                NetworkTasks.claimTask(getContext(), t.getId());
+                            }
                             break;
                         case R.id.edit_button:
                             PopupMenu popupMenu = new PopupMenu(getActivity(), v);

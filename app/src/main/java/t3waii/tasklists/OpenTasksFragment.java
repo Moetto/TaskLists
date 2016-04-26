@@ -44,6 +44,9 @@ public class OpenTasksFragment extends TasksFragment {
                     switch (v.getId()) {
                         case R.id.claim_button:
                             Log.d(TAG, "claim clicked");
+                            if(t != null) {
+                                NetworkTasks.claimTask(getContext(), t.getId());
+                            }
                             break;
                         default:
                             Log.d(TAG, "Halp, I've been clicked but I don't know where!");

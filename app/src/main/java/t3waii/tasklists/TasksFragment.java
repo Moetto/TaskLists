@@ -137,11 +137,27 @@ public abstract class TasksFragment extends ListFragment {
                         int taskId = intent.getIntExtra(Task.EXTRA_TASK_ID, 0);
                         removeTask(taskId);
                         break;
+
+                    case Task.ACTION_UPDATE_TASK:
+                        try {
+                            JSONObject taskJson = new JSONObject(intent.getStringExtra(Task.EXTRA_TASK_AS_JSON_STRING));
+                            Task task = new Task(taskJson);
+                            handleEditTask(task);
+                        } catch (JSONException ex) {
+                            Log.d(TAG, Log.getStackTraceString(ex));
+                        }
+                        break;
                 }
             }
         };
 
-        for (String action : new String[]{Task.ACTION_GET_TASK, Task.ACTION_POST_TASK, Task.ACTION_UPDATE_TASKS, Task.ACTION_REMOVE_TASK, Task.ACTION_REMOVE_TASK_BY_ID}) {
+        for (String action : new String[]{
+                Task.ACTION_GET_TASK,
+                Task.ACTION_POST_TASK,
+                Task.ACTION_UPDATE_TASK,
+                Task.ACTION_UPDATE_TASKS,
+                Task.ACTION_REMOVE_TASK,
+                Task.ACTION_REMOVE_TASK_BY_ID}) {
             intentFilters.add(new IntentFilter(action));
         }
 
@@ -149,6 +165,26 @@ public abstract class TasksFragment extends ListFragment {
             getActivity().registerReceiver(broadcastReceiver, intentFilter);
         }
 
+    }
+
+    protected boolean handleEditTask(Task task) {
+        for(Task t : tasks) {
+            if(t.equals(task)) {
+                if(affectThisFragment(task)) {
+                    t.updateTask(task);
+                } else {
+                    tasks.remove(t);
+                }
+                return true;
+            }
+        }
+
+        if(affectThisFragment(task)) {
+            tasks.add(task);
+            return true;
+        }
+
+        return false;
     }
 
     protected boolean affectThisFragment(Task task) {
