@@ -63,7 +63,7 @@ public class GeofenceIntentService extends IntentService {
                     PendingIntent pendingIntent = PendingIntent.getActivity(this, taskId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     Notification notification = new Notification.Builder(this)
                             .setContentText("You are near " + taskName + " location")
-                            .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                            .setSmallIcon(R.drawable.appicon)
                             .setContentIntent(pendingIntent)
                             .build();
 

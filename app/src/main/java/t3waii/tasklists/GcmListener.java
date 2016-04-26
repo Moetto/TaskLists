@@ -55,7 +55,7 @@ public class GcmListener extends GcmListenerService {
                     PendingIntent pendingCancel = PendingIntent.getBroadcast(this, id, intentCancel, PendingIntent.FLAG_ONE_SHOT);
 
                     Notification notification = new Notification.Builder(this)
-                            .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                            .setSmallIcon(R.drawable.appicon)
                             .setContentText(inviterName + " has invited you to a group called " + groupName)
                             .addAction(R.drawable.check_small, "Join", pendingOk)
                             .addAction(android.R.drawable.ic_delete, "Dismiss", pendingCancel)

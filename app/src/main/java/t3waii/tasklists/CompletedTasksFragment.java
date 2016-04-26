@@ -81,7 +81,7 @@ public class CompletedTasksFragment extends TasksFragment {
             NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
             Notification notification = new Notification.Builder(getContext())
                     .setContentText("Your task "+task.getName() + " has been completed")
-                    .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                    .setSmallIcon(R.drawable.appicon)
                     .setContentIntent(pendingIntent)
                     .build();
             notificationManager.notify(task.getId(), notification);
