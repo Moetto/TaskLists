@@ -126,11 +126,28 @@ public class CreatedTasksFragment extends TasksFragment implements PopupMenu.OnM
         switch (item.getItemId()) {
             case R.id.edit_task:
                 Log.d(TAG, "edit clicked");
+
+                Task t = null;
+                for (Task task : tasks) {
+                    if (task.getId() == taskId) {
+                        t = task;
+                        break;
+                    }
+                }
+
+                Intent intent = new Intent(getContext(), NewTask.class);
+                intent.putExtra("edit", true);
+                intent.putExtra("taskId", t.getId());
+                intent.putExtra("creator", true);
+                intent.putExtra("assigned", t.getCreator() == t.getResponsibleMemberId() ? true : false);
+                startActivity(intent);
                 return true;
+
             case R.id.remove_task:
                 Log.d(TAG, "remove clicked");
                 NetworkTasks.deleteTask(getContext(), taskId);
                 return true;
+
             default:
                 Log.d(TAG, "dunno what was clicked");
                 return false;

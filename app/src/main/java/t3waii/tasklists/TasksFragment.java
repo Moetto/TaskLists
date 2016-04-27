@@ -195,10 +195,6 @@ public abstract class TasksFragment extends ListFragment {
         return false;
     }
 
-    protected void openEditTask(Task task) {
-        
-    }
-
     protected boolean affectThisFragment(Task task) {
         return false;
     }
