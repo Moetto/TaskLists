@@ -29,9 +29,11 @@ public class Invite extends BroadcastReceiver {
                 Log.d(TAG, "Accepted invite");
                 int groupId = intent.getIntExtra(Group.EXTRA_GROUP_ID, 0);
                 NetworkGroupMembers.joinGroup(context, groupId);
+            case ACTION_CANCEL_INVITE:
                 NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(intent.getIntExtra(Invite.EXTRA_INVITE_ID, 0));
                 break;
+
         }
     }
 }
