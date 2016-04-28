@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.loopj.android.http.RequestParams;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -67,63 +68,61 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
     }
 
     public void setEditMode(boolean creator, boolean assigned, final Task task) {
+        // Set existing values
         EditText name = (EditText) findViewById(R.id.newTaskName);
         name.setText(task.getName());
 
+        estimatedDate = (EditText) findViewById(R.id.editTaskDueDate);
+        estimatedTime = (EditText) findViewById(R.id.editTaskDueTime);
+
+        if(task.getDeadline() != null) {
+            Calendar due = Calendar.getInstance();
+            due.setTime(task.getDeadline());
+            dueDate.setText(dateFormatter.format(due.getTime()));
+            dueTime.setText(timeFormatter.format(due.getTime()));
+        }
+
+        if(task.getEstimatedCompletion() != null) {
+            Calendar estimate = Calendar.getInstance();
+            estimate.setTime(task.getEstimatedCompletion());
+            estimatedDate.setText(dateFormatter.format(estimate.getTime()));
+            estimatedTime.setText(timeFormatter.format(estimate.getTime()));
+        }
+
+        for(int i = 0; i < newTaskAssignedTo.getAdapter().getCount(); i++) {
+            User u = (User) newTaskAssignedTo.getItemAtPosition(i);
+            if(u.getId() == task.getResponsibleMemberId()) {
+                newTaskAssignedTo.setSelection(i);
+                break;
+            }
+        }
+
+        for(int i = 0; i < newTaskLocation.getAdapter().getCount(); i++) {
+            Location l = (Location) newTaskLocation.getItemAtPosition(i);
+            if(l.getId() == task.getLocation()) {
+                newTaskLocation.setSelection(i);
+                break;
+            }
+        }
+
+        // Change save button onclick
         Button save = (Button) findViewById(R.id.newTaskSave);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, String> values = parseValues();
-
-                String name = values.get("title");
-                String description = values.get("description");
-                String deadline = values.get("deadline");
-                String estimatedCompletionTime = values.get("estimated_completion_time");
-                String responsibleMember = values.get("responsible_member");
-                String location = values.get("location");
-
-                Map<String, String> changedValues = new HashMap<>();
-
-                if (name != task.getName()) {
-                    changedValues.put("title", name);
-                    changedValues.put("description", description);
-                }
-
-                String taskDeadline = task.getDeadline() != null ? Long.toString(task.getDeadline().getTime()) : "";
-                if (deadline != taskDeadline) {
-                    changedValues.put("deadline", deadline);
-                }
-
-                if (estimatedCompletionTime != null || task.getEstimatedCompletion() != null) {
-                    if (estimatedCompletionTime != Long.toString(task.getEstimatedCompletion().getTime())) {
-                        changedValues.put("estimated_completion_time", estimatedCompletionTime);
-                    }
-                }
-
-                if (responsibleMember != Integer.toString(task.getResponsibleMemberId())) {
-                    changedValues.put("responsible_member", responsibleMember);
-                }
-
-                if (location != Integer.toString(task.getLocation())) {
-                    changedValues.put("location", location);
-                }
-
-                Log.d(TAG, "changed:" + changedValues);
-
-                //TODO: find differences and send to server
+                Log.d(TAG, "changed:" + values.toString());
+                NetworkTasks.editTask(getApplicationContext(), task.getId(), new RequestParams(values));
                 finish();
             }
         });
 
+        // Disable/enable and show/hide fields based on whether the task is assigned to user
         if (assigned) {
             TextView estimatedLabel = (TextView) findViewById(R.id.editTaskEstimatedLabel);
             estimatedLabel.setVisibility(View.VISIBLE);
             LinearLayout estimatedFields = (LinearLayout) findViewById(R.id.editTaskEstimatedFields);
             estimatedFields.setVisibility(View.VISIBLE);
-
-            estimatedDate = (EditText) findViewById(R.id.editTaskDueDate);
-            estimatedTime = (EditText) findViewById(R.id.editTaskDueTime);
 
             estimatedDate.setInputType(InputType.TYPE_NULL);
             estimatedTime.setInputType(InputType.TYPE_NULL);
@@ -134,6 +133,7 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
             estimatedTime.setOnFocusChangeListener(this);
         }
 
+        // Disable/enable and show/hide fields based on whether the task is created by user
         if (!creator) {
             name.setEnabled(false);
 
@@ -242,6 +242,8 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
             c.set(year, month, day, hour, minute, 0);
             values.put("deadline", Long.toString(c.getTimeInMillis()));
+        } else {
+            values.put("deadline", "");
         }
 
         if (estimatedDate != null && estimatedTime != null && estimatedTimeDialog != null && estimatedDateDialog != null) {
@@ -271,17 +273,23 @@ public class NewTask extends Activity implements View.OnFocusChangeListener {
 
                 c.set(year, month, day, hour, minute, 0);
                 values.put("estimated_completion_time", Long.toString(c.getTimeInMillis()));
+            } else {
+                values.put("estimated_completion_time", "");
             }
         }
 
         User u = (User) newTaskAssignedTo.getSelectedItem();
         if (u.getId() > 0) {
             values.put("responsible_member", Integer.toString(u.getId()));
+        } else {
+            values.put("responsible_member", "");
         }
 
         Location l = (Location) newTaskLocation.getSelectedItem();
         if (l.getId() > 0) {
             values.put("location", Integer.toString(l.getId()));
+        } else {
+            values.put("location", "");
         }
 
         return values;
