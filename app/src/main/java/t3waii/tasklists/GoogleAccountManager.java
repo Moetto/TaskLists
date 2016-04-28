@@ -7,12 +7,9 @@ package t3waii.tasklists;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -198,10 +195,8 @@ public class GoogleAccountManager extends Fragment implements
     }
 
     public String getGoogleId() {
-        String personEmail = account.getEmail();
         String personId = account.getId();
         Log.d(TAG, personId);
-        Uri personPhoto = account.getPhotoUrl();
         return personId;
     }
 

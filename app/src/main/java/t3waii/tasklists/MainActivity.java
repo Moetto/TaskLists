@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Location.ACTION_NEW_LOCATION,
                 Location.ACTION_GET_LOCATIONS,
                 Location.ACTION_LOCATION_REMOVED,
+                Location.ACTION_UPDATE_LOCATIONS,
                 NetworkGroupMembers.ACTION_UPDATE_USERS,
                 NetworkRegister.ACTION_REGISTERED,
                 Task.ACTION_TASKS_SHOULD_UPDATE,

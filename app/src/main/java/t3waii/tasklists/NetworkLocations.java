@@ -53,9 +53,6 @@ public class NetworkLocations {
                 intent.putExtra(Location.EXTRA_LOCATION, response);
                 intent.putExtra("test", new Task(1, 1));
                 context.sendBroadcast(intent);
-                //MainActivity.locations.add(l);
-                //updateDatasets();
-                //TODO: notify other group members of new location
             }
 
             @Override
@@ -83,64 +80,6 @@ public class NetworkLocations {
                 intent.setAction(Location.ACTION_GET_LOCATIONS);
                 intent.putExtra(Location.EXTRA_LOCATIONS_JSON, response);
                 context.sendBroadcast(intent);
-
-                /*
-                // get jsonarray
-                JSONArray locations;
-                try {
-                    locations = new JSONArray(response);
-                } catch (JSONException e) {
-                    Log.d(TAG, "unable to parse locations jsonarray");
-                    return;
-                }
-
-                // parse and store locatiosn from jsonarray
-                List<Location> locationList = new ArrayList<>();
-                for (int i = 0; i < locations.length(); i++) {
-                    JSONObject jsonLocation;
-                    try {
-                        jsonLocation = (JSONObject) locations.get(i);
-                    } catch (JSONException e) {
-                        Log.d(TAG, "unable to parse single location!");
-                        continue;
-                    }
-
-                    Location location = parseLocation(jsonLocation);
-                    if (location == null) {
-                        continue;
-                    }
-
-                    locationList.add(location);
-                }
-
-                // remove locations that do not exist anymore
-                for (Location mainLocation : MainActivity.getLocations()) {
-                    boolean stillExists = false;
-                    for (Location l : locationList) {
-                        if (mainLocation.getId() == l.getId()) {
-                            stillExists = true;
-                            break;
-                        }
-                    }
-                    if (!stillExists) {
-                        MainActivity.removeLocation(mainLocation);
-                    }
-                }
-
-                // add locations that are not already in the list
-                for (Location l : locationList) {
-                    boolean alreadyExists = false;
-                    for (Location mainLocation : MainActivity.getLocations()) {
-                        if (mainLocation.getId() == l.getId()) {
-                            alreadyExists = true;
-                            break;
-                        }
-                    }
-                    if (!alreadyExists) {
-                        MainActivity.addLocation(l);
-                    }
-                }
-                */
             }
 
             @Override
@@ -174,25 +113,5 @@ public class NetworkLocations {
                 }
             }
         });
-    }
-
-    // Parse Location information from json and return it as Location object
-    private static Location parseLocation(JSONObject jsonLocation) {
-        int id;
-        String name;
-        double latitude, longitude;
-
-        try {
-            id = jsonLocation.getInt("id");
-            name = jsonLocation.getString("name");
-            latitude = jsonLocation.getDouble("latitude");
-            longitude = jsonLocation.getDouble("longitude");
-
-        } catch (JSONException e) {
-            Log.d(TAG, "Unable to parse at least one of the location parameters!");
-            return null;
-        }
-
-        return new Location(id, name, new LatLng(latitude, longitude));
     }
 }

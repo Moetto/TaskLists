@@ -117,6 +117,8 @@ public class ManageGroupLocations extends Activity {
             public void onReceive(Context context, Intent intent) {
                 switch (intent.getAction()) {
                     case Location.ACTION_GET_LOCATIONS:
+                    case Location.ACTION_UPDATE_LOCATIONS:
+                        Log.d(TAG, "Updating locations");
                         try {
                             locations.clear();
                             locations.addAll(Location.parseLocations(intent.getStringExtra(Location.EXTRA_LOCATIONS_JSON)));
@@ -137,6 +139,7 @@ public class ManageGroupLocations extends Activity {
                             Log.e(TAG, "Error in location data");
                             Log.e(TAG, Log.getStackTraceString(ex));
                         }
+                        locationListAdapter.notifyDataSetChanged();
                         break;
                     case Location.ACTION_LOCATION_REMOVED:
                         Log.d(TAG, "Removing location");
@@ -149,6 +152,7 @@ public class ManageGroupLocations extends Activity {
                         }
                         locationListAdapter.notifyDataSetChanged();
                         break;
+
                 }
                 Log.d(TAG, "Received new locations");
             }
