@@ -206,8 +206,6 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
         switch (id) {
             //noinspection SimplifiableIfStatement
-            case R.id.action_settings:
-                return true;
             case R.id.action_sign_out:
                 GoogleAccountManager googleAccountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
                 googleAccountManager.logout();
