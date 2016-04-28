@@ -173,9 +173,9 @@ public class GoogleAccountManager extends Fragment implements
 
     private void showToast(boolean signedIn) {
         if (signedIn) {
-            Toast.makeText(getActivity(), "Signed in", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Signed in", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_SHORT).show();
         }
     }
 
