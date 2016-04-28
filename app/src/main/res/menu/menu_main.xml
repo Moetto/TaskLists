@@ -2,13 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="t3waii.tasklists.MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/dialog_newgroup_settings"
+    <item android:id="@+id/dialog_newgroup_settings"
         android:orderInCategory="100"
         android:title="@string/new_group"
         app:showAsAction="never" />
