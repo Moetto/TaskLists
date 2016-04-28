@@ -51,9 +51,6 @@ public class GoogleAccountManager extends Fragment implements
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken("727690215041-1oa6sfgn9u225i7m4gkrmkscmlojlqg5.apps.googleusercontent.com")
-                //.requestIdToken("AIzaSyC6da_h7dhxx-BM9eNH1rPqpO9GYiDkF6o")
-                //.requestIdToken("727690215041-mh8m0nest502p77vr63iuklqubrkvfml.apps.googleusercontent.com")
-                //.requestIdToken("727690215041-4nkr29ftd2eishnqr1eb4ljbn3m2bhqu.apps.googleusercontent.com")
                 .build();
         // [END configure_signin]
 
@@ -78,7 +75,9 @@ public class GoogleAccountManager extends Fragment implements
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
+            if (result.isSuccess()) {
+                handleSignInResult(result);
+            }
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
@@ -87,7 +86,7 @@ public class GoogleAccountManager extends Fragment implements
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
-                    Log.d(TAG, googleSignInResult.toString());
+                    Log.d(TAG, "Got result callback "+googleSignInResult.isSuccess());
                     handleSignInResult(googleSignInResult);
                 }
             });
@@ -101,7 +100,7 @@ public class GoogleAccountManager extends Fragment implements
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            Log.d(TAG, ""+resultCode);
+            Log.d(TAG, "Activityresultcode: " + resultCode);
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -120,11 +119,9 @@ public class GoogleAccountManager extends Fragment implements
                 signInListener.onSignIn();
             }
         } else {
-
             signedIn = false;
-            showToast(false);
             if (this.signInListener != null) {
-                signInListener.onLogOut();
+                //signInListener.onLogOut();
             }
             // Signed out, show unauthenticated UI.
         }
@@ -176,9 +173,9 @@ public class GoogleAccountManager extends Fragment implements
 
     private void showToast(boolean signedIn) {
         if (signedIn) {
-            Toast.makeText(getActivity(), "Signed in", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Signed in", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -193,7 +190,11 @@ public class GoogleAccountManager extends Fragment implements
 
     public void logout() {
         Log.d(TAG, "Logout");
+        showToast(false);
         signOut();
+        if (signInListener != null) {
+             signInListener.onLogOut();
+        }
     }
 
     public String getGoogleId() {
