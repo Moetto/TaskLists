@@ -198,7 +198,6 @@ public class GoogleAccountManager extends Fragment implements
     }
 
     public String getGoogleId() {
-        String personName = account.getDisplayName();
         String personEmail = account.getEmail();
         String personId = account.getId();
         Log.d(TAG, personId);
@@ -210,6 +209,9 @@ public class GoogleAccountManager extends Fragment implements
         return account.getIdToken();
     }
 
+    public String getName() {
+        return account.getDisplayName();
+    }
     public boolean isSignedIn() {
         return signedIn;
     }

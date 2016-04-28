@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     private static Set<Location> locations = new HashSet<>();
     private static List<Fragment> fragments = new ArrayList<>();
     private static int selfGroupMemberId, groupId;
+    private static String name;
     BroadcastReceiver broadcastReceiver;
 
     @Override
@@ -386,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
 
     public void register() {
         GoogleAccountManager accountManager = (GoogleAccountManager) getFragmentManager().findFragmentByTag(ACCOUNT_MANAGER);
+        name = accountManager.getName();
         NetworkRegister.register(this, accountManager.getGoogleToken(), register);
     }
 
@@ -404,6 +406,10 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
     public static void addLocation(Location location) {
         locations.add(location);
         updateDatasets();
+    }
+
+    public static String getName() {
+        return name;
     }
 
     public static List<Location> getLocations() {

@@ -48,15 +48,16 @@ public class NetworkRegister {
             protected void onPostExecute(String gcmToken) {
                 super.onPostExecute(gcmToken);
                 if (gcmToken != null) {
-                    NetworkRegister.sendRegisterRequest(context, googleToken, requestCode, gcmToken);
+                    NetworkRegister.sendRegisterRequest(context, googleToken, gcmToken);
                 }
             }
         }.execute();
     }
 
-    private static void sendRegisterRequest(final Context context, String googleToken, final int requestCode, String gcmToken) {
+    private static void sendRegisterRequest(final Context context, String googleToken, String gcmToken) {
         final AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams("token", googleToken, "gcm_token", gcmToken);//, "device_id", deviceId);
+        Log.d(TAG, "Registering with google token: "+googleToken);
+        RequestParams params = new RequestParams("token", googleToken, "gcm_token", gcmToken, "name", MainActivity.getName());
         Log.d(TAG, params.toString());
 
         client.post(MainActivity.getServerAddress() + "register/", params, new AsyncHttpResponseHandler() {
