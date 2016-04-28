@@ -20,14 +20,14 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by matti on 4/21/16.
  */
-public class NetworkGroupMembers extends NetworkHandler{
+public class NetworkGroupMembers extends NetworkHandler {
     public final static String TAG = "TasksNetworkGroupMem",
             ACTION_UPDATE_USERS = "t3waii.tasklists.action_update_users",
             EXTRA_USER_JSON_OBJECT_STRING = "extraUser",
             EXTRA_USER_JSON_ARRAY_STRING = "extraUserList";
 
-    protected static String getUrl(){
-        return getBaseUrl()+"/groupmembers/";
+    protected static String getUrl() {
+        return getBaseUrl() + "/groupmembers/";
     }
 
     public static void getAllUsers(final Context context) {
@@ -78,16 +78,33 @@ public class NetworkGroupMembers extends NetworkHandler{
         }
     }
 
+    public static void leaveGroup(final Context context) {
+        getAsyncHttpClient().patch(getUrl()+MainActivity.getSelfGroupMemberId()+"/", new RequestParams("group", ""), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d(TAG, "Leaving group successful");
+                Intent intent = new Intent();
+                intent.setAction(Group.ACTION_LEAVE_GROUP);
+                context.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG, "Leaving group failed");
+            }
+        });
+    }
+
     public static void joinGroup(final Context context, final int groupId) {
         Log.d(TAG, "Trying to join group");
         String groupIdAsString;
-        if (groupId == 0){
+        if (groupId == 0) {
             groupIdAsString = "";
         } else {
-            groupIdAsString = ""+groupId;
+            groupIdAsString = "" + groupId;
         }
         RequestParams params = new RequestParams("group", groupIdAsString);
-        getAsyncHttpClient().patch(getUrl() + MainActivity.getSelfGroupMemberId() +"/", params, new AsyncHttpResponseHandler() {
+        getAsyncHttpClient().patch(getUrl() + MainActivity.getSelfGroupMemberId() + "/", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Log.d(TAG, "Joined group");
@@ -100,7 +117,7 @@ public class NetworkGroupMembers extends NetworkHandler{
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Log.d(TAG, "Joining group failed");
-                Log.d(TAG, new String (responseBody));
+                Log.d(TAG, new String(responseBody));
             }
         });
     }

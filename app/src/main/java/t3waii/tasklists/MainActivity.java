@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                         break;
                     case Group.ACTION_LEAVE_GROUP:
                         Log.d(TAG, "Left group");
+                        setMainMenuGroupItemsVisibility(false);
                         groupId = 0;
+                        updateDatasets();
                         break;
                     case Location.ACTION_GET_LOCATIONS:
                         Log.d(TAG, "Got list of locations");
@@ -183,7 +185,8 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
                 Location.ACTION_LOCATION_REMOVED,
                 NetworkGroupMembers.ACTION_UPDATE_USERS,
                 NetworkRegister.ACTION_REGISTERED,
-                Task.ACTION_TASKS_SHOULD_UPDATE}) {
+                Task.ACTION_TASKS_SHOULD_UPDATE,
+                Group.ACTION_LEAVE_GROUP}) {
             IntentFilter intentFilter = new IntentFilter(action);
             registerReceiver(broadcastReceiver, intentFilter);
         }
@@ -302,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements SignInListener {
         alertDialogBuilder.setView(promptView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        NetworkGroups.leaveGroup(getApplicationContext());
+                        NetworkGroupMembers.leaveGroup(getApplicationContext());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
