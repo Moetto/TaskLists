@@ -27,9 +27,9 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="manage_group_users">Manage group users</string>
     <string name="manage_group_locations">Manage group locations</string>
-    <!--<string name="server_url">https://moetto.duckdns.org/moso/</string>-->
+    <string name="server_url">https://moetto.duckdns.org/moso/</string>
     <string name="remove_task">Remove</string>
-    <string name="server_url">http://192.168.1.6:8000/</string>
+    <!--<string name="server_url">http://192.168.1.6:8000/</string>-->
     <string name="gcm_sender_ID">727690215041</string>
     <string name="estimated_completion">Estimated completion</string>
 </resources>
