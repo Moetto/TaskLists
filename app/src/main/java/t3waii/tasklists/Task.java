@@ -75,7 +75,7 @@ public class Task implements Serializable {
         } catch (JSONException e) {
         }
         try {
-            int estimatedCompletionEpoch = taskAsJson.getInt("estimated_completion_time");
+            Long estimatedCompletionEpoch = taskAsJson.getLong("estimated_completion_time");
             estimatedCompletion = new Date(estimatedCompletionEpoch);
         } catch (JSONException e) {
         }
@@ -140,7 +140,9 @@ public class Task implements Serializable {
     public void updateTask(Task newValues) {
         this.name = newValues.getName();
         this.deadline = newValues.getDeadline();
+        this.estimatedCompletion = newValues.getEstimatedCompletion();
         this.responsibleMember = newValues.getResponsibleMemberId();
+        this.location = newValues.getLocation();
     }
 
     public int getResponsibleMemberId() {
